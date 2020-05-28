@@ -4,17 +4,25 @@
 <p align="center">
   Cuando el trabajo en el campo, require el uso de la tecnología.
 </p>
-<p>Sistema para el control de ordenes de servicio, ordenes de reparaciones, y algo más.</p>
 
 ## Descripción
 
-Sistema para el control de ordenes de servicio, ordenes de reparaciones, y algo más.
+Sistema para el control de ordenes de servicio, ordenes de trabajo, y algo más.
 
-Las caracteristicas de sistema es el siguiente:
+Realiza órdenes de trabajo digitales y mejora la imagen de tu empresa, crea órdenes de trabajo en pocos minutos y envíalas directamente a los dispositivos de tus técnicos en terreno, mejora el control de las tareas de mantenimiento y centraliza toda la información recolectada.
 
-- Hace esto.
-- Hace esto otro.
-- Otra cosa.
+Benefíciate de las funcionalidades de WASO, una solución que se adapta a las necesidades de las pequeñas, medianas y grandes empresas.
+
+Las caracteristicas principales son las siguientes:
+
+- Crea ordenes de trabajo que te permiten tener un informe más completo.
+- Adiciona fotografías para tener un informe más completo del antes, durante y después de la ejecución de tus ordenes de trabajo.
+- Geolocalización de tus técnicos, asimismo de los trabajos realizados para un mejor control de las operaciones.
+- Almacena la información de las operaciones en la nube, permitiendo el acceso y disponibilidad desde cualquier dispositivo.
+- Envía notificaciones a tus técnicos de las ordenes asignadas a estos.
+- Autorización y confirmación de las ordenes por parte de los clientes.
+- Centraliza tus datos y exporta tus informes.
+- Toma el control de las operaciones de campo de tu empresa.
 
 ## Installation
 
