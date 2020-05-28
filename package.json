@@ -1,8 +1,19 @@
 {
   "name": "waso-api",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Sistema para el control de ordenes de servicio, ordenes de reparaciones, y algo más.",
+  "authors": [
+    {
+      "name": "Henry Diaz",
+      "email": "hnrdiaz@gmail.com",
+      "url": "https://realsoft.dev"
+    },
+    {
+      "name": "Tommy Jiménez",
+      "email": "tom.jimenez1661@gmail.com",
+      "url": "https://realsoft.dev"
+    }
+  ],
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -22,6 +33,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",
+    "@nestjs/config": "^0.5.0",
     "@nestjs/core": "^7.0.0",
     "@nestjs/platform-express": "^7.0.0",
     "reflect-metadata": "^0.1.13",
