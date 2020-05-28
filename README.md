@@ -56,7 +56,7 @@ WASO es un proyecto de código abierto con licencia MIT. Puede crecer gracias a 
 ## Mantente en contacto
 
 - Autores - [Henry Diaz](https://mongecode.com), [Tommy Jiménez](https://tommy-jimenez.com)
-- Website - [https://realsoft.dev](https://realsoft.dev/)
+- Website - [https://waso.realsoft.dev](https://waso.realsoft.dev/)
 - Twitter - [@intelguasoft](https://twitter.com/intelguasoft)
 
 ## Licencia
