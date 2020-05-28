@@ -5,12 +5,22 @@ export default () => ({
     url: process.env.APP_URL,
   },
   database: {
-    type: String(process.env.DB_TYPE),
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT, 10) || 3306,
-    database: process.env.DB_DATABASE,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
+    mysql: {
+      type: String(process.env.LOC_DB_TYPE),
+      host: process.env.LOC_DB_HOST,
+      port: parseInt(process.env.LOC_DB_PORT, 10) || 3306,
+      database: process.env.LOC_DB_DATABASE,
+      username: process.env.LOC_DB_USERNAME,
+      password: process.env.LOC_DB_PASSWORD,
+    },
+    mssql: {
+      type: String(process.env.EXT_DB_TYPE),
+      host: process.env.EXT_DB_HOST,
+      port: parseInt(process.env.EXT_DB_PORT, 10) || 1433,
+      database: process.env.EXT_DB_DATABASE,
+      username: process.env.EXT_DB_USERNAME,
+      password: process.env.EXT_DB_PASSWORD,
+    },
   },
   mail: {
     driver: process.env.MAIL_DRIVER,
