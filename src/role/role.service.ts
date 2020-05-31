@@ -1,6 +1,7 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Role } from './local/role.entity';
+import { Status } from '../common/status.enum';
 
 @Injectable()
 export class RoleService {
@@ -9,30 +10,79 @@ export class RoleService {
     private roleRepository: Repository<Role>,
   ) {}
 
-  async findAll(): Promise<Role[]> {
-    return this.roleRepository.find();
+  async getAll(): Promise<Role[]> {
+
+    const roles: Role[] = await this.roleRepository.find({
+      where: { status: Status.ACTIVE }
+    });
+
+    return roles;
   }
 
-  async find(id: string): Promise<Role> {
-    return this.roleRepository.findOne(id);
+  async get(id: string): Promise<Role> {
+
+    if (!id) {
+      throw new BadRequestException('The resource ID was not sent')
+    }
+
+    const role: Role = await this.roleRepository.findOne(id);
+
+    if (!role) {
+      throw new NotFoundException('The requested resource was not found')
+    }
+
+    return role;
   }
 
-  async create(role: Role) {
-    return this.roleRepository.save(role);
+  async create(role: Role): Promise<Role> {
+
+    const roleCreated = await this.roleRepository.save(role);
+
+    return roleCreated;
   }
 
-  async update(id: string, role: Role) {
+  async update(id: string, role: Role): Promise<Role> {
 
-    let roleDb: Role =  await this.roleRepository.findOne(id);
+    if (!id) {
+      throw new BadRequestException('The resource ID was not sent')
+    }
 
-    return await this.roleRepository.update(id, roleDb);
+    const roleDb: Role =  await this.roleRepository.findOne(id, {
+      where: { status: Status.ACTIVE }
+    });
+
+    if (!roleDb) {
+      throw new NotFoundException('The requested resource was not found')
+    }
+    
+    await this.roleRepository.update(id, role);
+
+    const roleUpdated = await this.roleRepository.findOne(id);
+
+    return roleUpdated;
 
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<Role> {
 
-    let roleDb: Role = await this.roleRepository.findOne(id);
+    if (!id) {
+      throw new BadRequestException('The resource ID was not sent')
+    }
 
-    return await this.roleRepository.delete(roleDb);
+    const roleDb: Role = await this.roleRepository.findOne(id, {
+      where: { status: Status.ACTIVE }
+    });
+
+    if (!roleDb) {
+      throw new NotFoundException('The requested resource was not found')
+    }
+
+    await this.roleRepository.update(id, {
+      status: Status.ACTIVE
+    });
+
+    const roleDeleted = await this.roleRepository.findOne(id);
+
+    return roleDeleted;
   }
 }

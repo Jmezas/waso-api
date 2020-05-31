@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { MinLength, MaxLength, IsEmail, IsInt, Length } from 'class-validator';
+import { Status } from '../../common/status.enum';
 
 @Entity('roles')
 export class Role {
@@ -18,4 +19,7 @@ export class Role {
 
   @Column({ type: 'varchar', length: 500 })
   description: string;
+
+  @Column({ type: 'enum', enum: Status, default: Status.ACTIVE })
+  status: string;
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Res, HttpStatus } from '@nestjs/common';
 
 // Services
 import { CustomerService } from './customer.service';
@@ -14,13 +14,24 @@ export class CustomerController {
     ) { }
 
     @Get()
-    async getAll() {
-        return await this._customerService.findAll();
+    async getCustomers( @Res() res ) {
+
+        const customers = await this._customerService.getAll();
+
+        res.status(HttpStatus.OK).json({
+            customers
+        });
+
     }
 
     @Get('/:id')
-    async get(@Param('id') id: string) {
-        return await this._customerService.find(id);
+    async get( @Res() res,  @Param('id') id: string ) {
+
+        const customer = await this._customerService.get(id);
+
+        res.status(HttpStatus.OK).json({
+            customer
+        });
     }
 
 }

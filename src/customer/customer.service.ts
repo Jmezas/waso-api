@@ -1,6 +1,7 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Customer } from './external/customer.entity';
+import { Status } from '../common/status.enum';
 
 @Injectable()
 export class CustomerService {
@@ -9,12 +10,28 @@ export class CustomerService {
     private customerRepository: Repository<Customer>,
   ) {}
 
-  async findAll(): Promise<Customer[]> {
-    return this.customerRepository.find();
+  async getAll(): Promise<Customer[]> {
+
+    const customers: Customer[] = await this.customerRepository.find({
+      where: { status: Status.ACTIVE }
+    });
+
+    return customers;
   }
 
-  async find(id: string): Promise<Customer> {
-    return this.customerRepository.findOne(id);
+  async get(id: string): Promise<Customer> {
+
+    if (!id) {
+      throw new BadRequestException('The resource ID was not sent')
+    }
+
+    const customer: Customer = await this.customerRepository.findOne(id);
+
+    if (!customer) {
+      throw new NotFoundException('The requested resource was not found')
+    }
+
+    return customer;
   }
 
 }

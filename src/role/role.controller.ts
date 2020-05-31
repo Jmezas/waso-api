@@ -13,22 +13,33 @@ export class RoleController {
     ) { }
 
     @Get()
-    async getAll() {
-        return await this._roleService.findAll();
+    async getRoles( @Res() res ) {
+
+        const roles = await this._roleService.getAll();
+
+        res.status(HttpStatus.OK).json({
+            roles
+        });
+        
     }
 
     @Get('/:id')
-    async get( @Param('id') id: string ) {
-        return await this._roleService.find(id);
+    async getRole( @Res() res, @Param('id') id: string ) {
+
+        const role = await this._roleService.get(id);
+
+        res.status(HttpStatus.OK).json({
+            role
+        });
     }
 
     @Post()
-    async create( @Res() res, @Body() role: Role ) {
+    async createRole( @Res() res, @Body() role: Role ) {
 
-        let roleCreated = await this._roleService.create(role);
+        const roleCreated = await this._roleService.create(role);
 
         res.status(HttpStatus.CREATED).json({
-            message: 'Role created successfully',
+            message: 'Role successfully created',
             roleCreated
         });
     }
@@ -36,10 +47,10 @@ export class RoleController {
     @Put('/:id')
     async update( @Res() res, @Param('id') id: string, @Body() role: Role ) {
 
-        let roleUpdated = await this._roleService.update(id, role);
+        const roleUpdated = await this._roleService.update(id, role);
 
         res.status(HttpStatus.OK).json({
-            message: 'Role updated successfully',
+            message: 'Role successfully updated',
             roleUpdated
         });
 
@@ -48,10 +59,10 @@ export class RoleController {
     @Delete('/:id')
     async delete( @Res() res, @Param('id') id: string ) {
 
-        let roleDeleted = await this._roleService.delete(id);
+        const roleDeleted = await this._roleService.delete(id);
 
         res.status(HttpStatus.OK).json({
-            message: 'Role deleted successfully',
+            message: 'Role successfully deleted',
             roleDeleted
         });
     }
