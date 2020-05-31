@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Customer } from './customer.entity';
+import { Customer } from './external/customer.entity';
 
 @Injectable()
 export class CustomerService {
@@ -12,4 +12,9 @@ export class CustomerService {
   async findAll(): Promise<Customer[]> {
     return this.customerRepository.find();
   }
+
+  async find(id: string): Promise<Customer> {
+    return this.customerRepository.findOne(id);
+  }
+
 }

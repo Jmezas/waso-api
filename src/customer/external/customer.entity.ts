@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { MinLength, MaxLength, IsEmail, IsInt, Length } from 'class-validator';
+import { Status } from '../../common/status.enum';
 
 @Entity('customers')
 export class Customer {
@@ -29,15 +30,18 @@ export class Customer {
   @Column({ type: 'varchar', length: 25 })
   nit: string;
 
-  @Column({ type: 'integer', length: 8 })
-  @IsInt()
-  @Length(8, 8)
-  phone: number;
-
   @Column({ type: 'varchar', length: 500 })
   address: string;
 
+  @Column({ type: 'integer' })
+  @IsInt()
+  @Length(8, 8)
+  phone: number;
+  
   @Column({ type: 'varchar', length: 150 })
   @IsEmail()
   email: string;
+
+  @Column({ type: 'varchar', enum: Status, default: Status.ACTIVE, length: 25 })
+  status: string;
 }

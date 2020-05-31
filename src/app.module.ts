@@ -6,8 +6,10 @@ import { TechnicalModule } from './technical/technical.module';
 import { RoleModule } from './role/role.module';
 import { AuthModule } from './auth/auth.module';
 import { MaterialModule } from './material/material.module';
-import { OrderModule } from './order/order.module';
 import { DatabaseModule } from './database/database.module';
+import { EquipmentModule } from './equipment/equipment.module';
+import { CustomerEquipmentModule } from './customer-equipment/customer-equipment.module';
+import { CoreModule } from './core/core.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -22,8 +24,10 @@ import configuration from './config/configuration';
     RoleModule,
     AuthModule,
     MaterialModule,
-    OrderModule,
     DatabaseModule,
+    EquipmentModule,
+    CustomerEquipmentModule,
+    CoreModule,
   ],
 })
 export class AppModule {}

@@ -1,5 +1,5 @@
 import { Connection, Repository } from 'typeorm';
-import { Customer } from './customer.entity';
+import { Customer } from './external/customer.entity';
 
 export const customerProviders = [
   {
