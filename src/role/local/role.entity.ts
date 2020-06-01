@@ -1,6 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { MinLength, MaxLength, IsEmail, IsInt, Length } from 'class-validator';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { MinLength, MaxLength } from 'class-validator';
 import { Status } from '../../common/status.enum';
+
+// Model-Relations
+import { User } from '../../user/local/user.entity';
 
 @Entity('roles')
 export class Role {
@@ -22,4 +25,16 @@ export class Role {
 
   @Column({ type: 'enum', enum: Status, default: Status.ACTIVE })
   status: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+
+  @OneToMany(
+    type => User,
+    user => user.role
+  )
+  users: User[];
 }

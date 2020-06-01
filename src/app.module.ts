@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Scope } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { CustomerModule } from './customer/customer.module';
@@ -11,6 +11,9 @@ import { EquipmentModule } from './equipment/equipment.module';
 import { CustomerEquipmentModule } from './customer-equipment/customer-equipment.module';
 import { CoreModule } from './core/core.module';
 import configuration from './config/configuration';
+// import { Moment } from 'moment';
+import moment = require('moment');
+
 
 @Module({
   imports: [
