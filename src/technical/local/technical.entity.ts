@@ -1,6 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { MinLength, MaxLength, IsInt, Length, IsEmail } from 'class-validator';
 import { Status } from '../../common/status.enum';
+
+// Model-Relations
+import { Order } from '../../core/order/local/order.entity';
 
 @Entity('technicians')
 export class Technical {
@@ -51,5 +54,11 @@ export class Technical {
 
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
+
+    @OneToMany(
+        type => Order,
+        order => order.technical
+    )
+    orders: Order[];
 
 }

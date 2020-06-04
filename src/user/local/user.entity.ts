@@ -1,9 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { MinLength, MaxLength } from 'class-validator';
 import { Status } from '../../common/status.enum';
 
 // Model-Relations
 import { Role } from '../../role/local/role.entity';
+import { Order } from '../../core/order/local/order.entity';
 
 @Entity('users')
 export class User {
@@ -58,5 +59,11 @@ export class User {
     )
     @JoinColumn({ name: 'role_id' })
     role: Role;
+
+    @OneToMany(
+        type => Order,
+        order => order.user
+    )
+    orders: Order[];
 
 }
