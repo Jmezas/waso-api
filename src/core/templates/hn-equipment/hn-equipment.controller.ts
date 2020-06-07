@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Param, HttpStatus, Post, Body } from '@nestjs/common';
+import { Controller, Get, Res, Param, HttpStatus, Post, Body, Put, Delete } from '@nestjs/common';
 import { HnEquipmentService } from './hn-equipment.service';
 import { HnEquipmentDTO } from './dtos/hn-equipment.dto';
 
@@ -29,6 +29,26 @@ export class HnEquipmentController {
 
         res.status(HttpStatus.OK).json({
             hnEquipmentCreated
+        });
+    }
+
+    @Put('/:id')
+    async updateHnEquipment( @Res() res, @Param('id') id: string, @Body() hneDTO: HnEquipmentDTO ) {
+
+        const hnEquipmentUpdated = await this._hnEquipmentService.update(id, hneDTO);
+
+        res.status(HttpStatus.OK).json({
+            hnEquipmentUpdated
+        });
+    }
+
+    @Delete('/:id')
+    async deleteHnEquipment( @Res() res, @Param('id') id: string ) {
+
+        const hnEquipmentDeleted = await this._hnEquipmentService.delete(id);
+
+        res.status(HttpStatus.OK).json({
+            hnEquipmentDeleted
         });
     }
 
