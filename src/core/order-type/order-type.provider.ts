@@ -5,6 +5,6 @@ export const orderTypeProviders = [
     {
         provide: 'ORDER_TYPE_REPOSITORY',
         useFactory: (connection: Connection) => connection.getRepository(OrderType),
-        inject: ['LOCAL_CONNECTION'],
+        inject: ['A_LOCAL_CONNECTION'],
     },
 ];

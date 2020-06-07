@@ -5,6 +5,6 @@ export const technicalProviders = [
     {
         provide: 'TECHNICAL_REPOSITORY',
         useFactory: (connection: Connection) => connection.getRepository(Technical),
-        inject: ['LOCAL_CONNECTION'],
+        inject: ['A_LOCAL_CONNECTION'],
     },
 ];

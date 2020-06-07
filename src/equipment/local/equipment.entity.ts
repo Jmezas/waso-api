@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Status } from '../../common/status.enum';
+import { HnEquipment } from '../../core/templates/hn-equipment/local/hn-equipment.entity';
 
 @Entity('equipments')
 export class Equipment {
@@ -21,5 +22,11 @@ export class Equipment {
 
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
+
+    @OneToMany(
+        type => HnEquipment,
+        hn_equipment => hn_equipment.equipment
+    )
+    hn_equipment: HnEquipment
 
 }

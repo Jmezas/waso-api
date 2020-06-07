@@ -5,6 +5,6 @@ export const equipmentProviders = [
     {
         provide: 'EQUIPMENT_REPOSITORY',
         useFactory: (connection: Connection) => connection.getRepository(Equipment),
-        inject: ['LOCAL_CONNECTION'],
+        inject: ['A_LOCAL_CONNECTION'],
     },
 ];

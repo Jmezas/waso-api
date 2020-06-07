@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Status } from '../../../common/status.enum';
 
 // Model-Relations
@@ -6,6 +6,7 @@ import { Technical } from '../../../technical/local/technical.entity';
 import { User } from '../../../user/local/user.entity';
 import { OrderType } from '../../order-type/local/order-type.entity';
 import { ServiceType } from '../../service-type/local/service-type.entity';
+import { HnEquipment } from '../../templates/hn-equipment/local/hn-equipment.entity';
 
 @Entity('orders')
 export class Order {
@@ -86,5 +87,11 @@ export class Order {
     )
     @JoinColumn({ name: 'service_type_id' })
     service_type: ServiceType;
+
+    @OneToOne(
+        type => HnEquipment,
+        hn_equipment => hn_equipment.order
+    )
+    hn_equipment: HnEquipment;
 
 }

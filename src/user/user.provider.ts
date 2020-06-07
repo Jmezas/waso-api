@@ -5,6 +5,6 @@ export const userProviders = [
     {
         provide: 'USER_REPOSITORY',
         useFactory: (connection: Connection) => connection.getRepository(User),
-        inject: ['LOCAL_CONNECTION'],
+        inject: ['A_LOCAL_CONNECTION'],
     },
 ];
