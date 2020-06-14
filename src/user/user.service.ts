@@ -18,7 +18,9 @@ export class UserService {
 
         const customers: User[] = await this.userRepository.find({
             where: { status: Status.ACTIVE },
-            relations: ['role']
+            relations: ['role'],
+            skip: 0,
+            take: 5
         });
 
         return customers;
@@ -83,7 +85,7 @@ export class UserService {
         }
 
         await this.userRepository.update(id, {
-            status: Status.ACTIVE
+            status: Status.INACTIVE
         });
 
         const userDeleted = await this.userRepository.findOne(id);
