@@ -78,7 +78,7 @@ export class RoleService {
     }
 
     await this.roleRepository.update(id, {
-      status: Status.ACTIVE
+      status: Status.INACTIVE
     });
 
     const roleDeleted = await this.roleRepository.findOne(id);
