@@ -24,6 +24,17 @@ export class CustomerController {
 
     }
 
+    @Get('/select')
+    async getCustomersSelect(@Res() res) {
+
+        const customers = await this._customerService.getCustomerSelect();
+
+        res.status(HttpStatus.OK).json({
+            customers
+        });
+
+    }
+
     @Get('/:id')
     async get( @Res() res,  @Param('id') id: string ) {
 

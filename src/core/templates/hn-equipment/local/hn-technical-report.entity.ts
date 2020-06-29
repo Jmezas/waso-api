@@ -24,6 +24,9 @@ export class HnTechnicalReport {
     start_capacitor: boolean;
 
     @Column({ type: 'varchar', length: 100, nullable: true })
+    capacity_capacitor: string;
+
+    @Column({ type: 'varchar', length: 100, nullable: true })
     hydropneumatic: string;
     
     @Column({ type: 'varchar', length: 100, nullable: true })
@@ -53,17 +56,17 @@ export class HnTechnicalReport {
     @Column({ type: 'boolean', default: false })
     ball_valve: boolean;
 
-    @Column({ type: 'varchar', length: 100, nullable: true })
-    levelguard: string;
+    @Column({ type: 'boolean', default: false })
+    levelguard: boolean;
 
-    @Column({ type: 'varchar', length: 100, nullable: true })
-    float: string;
+    @Column({ type: 'boolean', default: false })
+    float: boolean;
 
     @Column({ type: 'int', nullable: true })
     float_measure: number;
 
-    @Column({ type: 'varchar', length: 100, nullable: true })
-    float_valve: string;
+    @Column({ type: 'boolean', default: false })
+    float_valve: boolean;
 
     @Column({ type: 'enum', enum: Status, default: Status.ACTIVE })
     status: Status;

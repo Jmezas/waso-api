@@ -24,6 +24,8 @@ export class TechnicalService {
         return technicians;
     }
 
+    // TODO: Servicio para selectAll
+
     async get(id: string): Promise<Technical> {
 
         const technical: Technical = await this.technicalRepository.findOne(id, {

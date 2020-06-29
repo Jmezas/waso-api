@@ -27,6 +27,6 @@ export class Equipment {
         type => HnEquipment,
         hn_equipment => hn_equipment.equipment
     )
-    hn_equipment: HnEquipment
+    hn_equipments: HnEquipment[];
 
 }

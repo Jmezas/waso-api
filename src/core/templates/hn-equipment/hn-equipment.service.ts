@@ -4,10 +4,10 @@ import { InjectConnection } from '@nestjs/typeorm';
 import { HnEquipment } from './local/hn-equipment.entity';
 import { HnComplementaryData } from './local/hn-complementary-data.entity';
 import { HnTechnicalReport } from './local/hn-technical-report.entity';
+import { Status } from 'src/common/status.enum';
 
 // DTO's
 import { HnEquipmentDTO } from './dtos/hn-equipment.dto';
-import { Status } from 'src/common/status.enum';
 
 @Injectable()
 export class HnEquipmentService {
@@ -28,7 +28,7 @@ export class HnEquipmentService {
 
         const hnEquipment: HnEquipment[] = await this.hneRespository.find({
             where: { order: order_id, status: Status.ACTIVE },
-            relations: ['hn_complementary_data', 'hn_technical_report']
+            relations: ['order', 'equipment', 'hn_technical_report', 'hn_complementary_data']
         });
 
         return hnEquipment;
@@ -40,28 +40,32 @@ export class HnEquipmentService {
 
         // let hneCreated = await manager.save(hneDTO.hn_equipment);
         let hneCreated = await this.hneRespository.save(hneDTO.hn_equipment);
+        let hntrCreated = null;
         let hncdCreated = null
-        let hntrCreated = null
-    
-        if (hneDTO.hn_complementary_data) {
-            // hncdCreated = await manager.save(hneDTO.hn_complementary_data);
-            hneDTO.hn_complementary_data.hn_equipment = hneCreated;
-            hncdCreated = await this.hncdRepository.save(hneDTO.hn_complementary_data);
-        }
-    
+
         if (hneDTO.hn_technical_report) {
-            // hntrCreated = await manager.save(hneDTO.hn_technical_report);
             hneDTO.hn_technical_report.hn_equipment = hneCreated;
             hntrCreated = await this.hntrRepository.save(hneDTO.hn_technical_report);
+        } else {
+            let hntr = new HnTechnicalReport();
+            hntr.hn_equipment = hneCreated;
+            hntrCreated = await this.hntrRepository.save(hntr);
         }
-    
+
+        if (hneDTO.hn_complementary_data) {
+            hneDTO.hn_complementary_data.hn_equipment = hneCreated;
+            hncdCreated = await this.hncdRepository.save(hneDTO.hn_complementary_data);
+        } else {
+            let hncd = new HnComplementaryData();
+            hncd.hn_equipment = hneCreated;
+            hncdCreated = await this.hncdRepository.save(hncd);
+        }
+
         return {
             hneCreated,
-            hncdCreated,
-            hntrCreated
+            hntrCreated,
+            hncdCreated
         }
-    
-        // console.log(hneDTO, manager);
 
     }
 
@@ -74,7 +78,7 @@ export class HnEquipmentService {
 
         const hnEquipmentDb = await this.hneRespository.findOne(id, {
             where: { status: Status.ACTIVE },
-            relations: ['hn_complementary_data', 'hn_technical_report']
+            relations: ['order', 'equipment', 'hn_technical_report', 'hn_complementary_data']
         });
 
         if (!hnEquipmentDb) {
@@ -82,11 +86,16 @@ export class HnEquipmentService {
         }
 
         await this.hneRespository.update(id, hnDto.hn_equipment);
-        await this.hncdRepository.update(hnEquipmentDb.hn_complementary_data.id, hnDto.hn_complementary_data);
-        await this.hntrRepository.update(hnEquipmentDb.hn_technical_report.id, hnDto.hn_technical_report);
+
+        if (hnDto.hn_technical_report) {
+            await this.hntrRepository.update(hnEquipmentDb.hn_technical_report.id, hnDto.hn_technical_report);
+        }
+        if (hnDto.hn_complementary_data) {
+            await this.hncdRepository.update(hnEquipmentDb.hn_complementary_data.id, hnDto.hn_complementary_data);
+        }
 
         const hnEquipmentUpdated = await this.hneRespository.findOne(id, {
-            relations: ['hn_complementary_data', 'hn_technical_report']
+            relations: ['order', 'equipment', 'hn_technical_report', 'hn_complementary_data']
         });
 
         return hnEquipmentUpdated;
@@ -102,7 +111,7 @@ export class HnEquipmentService {
 
         const hnEquipmentDb = await this.hneRespository.findOne(id, {
             where: { status: Status.ACTIVE },
-            relations: ['hn_complementary_data', 'hn_technical_report']
+            relations: ['order', 'equipment', 'hn_technical_report', 'hn_complementary_data']
         });
 
         if (!hnEquipmentDb) {
@@ -113,16 +122,16 @@ export class HnEquipmentService {
             status: Status.INACTIVE
         });
 
-        await this.hncdRepository.update(hnEquipmentDb.hn_complementary_data.id, {
-            status: Status.INACTIVE
-        });
-
         await this.hntrRepository.update(hnEquipmentDb.hn_technical_report.id, {
             status: Status.INACTIVE
         });
 
+        await this.hncdRepository.update(hnEquipmentDb.hn_complementary_data.id, {
+            status: Status.INACTIVE
+        });
+
         const hnEquipmentDeleted = await this.hneRespository.findOne(id, {
-            relations: ['hn_complementary_data', 'hn_technical_report']
+            relations: ['order', 'equipment', 'hn_technical_report', 'hn_complementary_data',]
         });
 
         return hnEquipmentDeleted;

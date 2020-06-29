@@ -56,7 +56,7 @@ export class HnEquipment {
 
     @ManyToOne(
         type => Equipment,
-        equipment => equipment.hn_equipment,
+        equipment => equipment.hn_equipments,
         {
             nullable: false
         }

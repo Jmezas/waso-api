@@ -36,9 +36,6 @@ export class HnComplementaryData {
     booth_width: number;
 
     @Column({ type: 'int', nullable: true })
-    booth_length: number;
-
-    @Column({ type: 'int', nullable: true })
     booth_depth: number;
 
     @Column({ type: 'int', nullable: true })
@@ -50,7 +47,7 @@ export class HnComplementaryData {
     @Column({ type: 'int', nullable: true })
     door_depth: number;
 
-    @Column({ type: 'boolean', nullable: true, default: false })
+    @Column({ type: 'boolean', default: false })
     underground: boolean;
 
     @Column({ type: 'enum', enum: Status, default: Status.ACTIVE })

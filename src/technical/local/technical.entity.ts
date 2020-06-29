@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { MinLength, MaxLength, IsInt, Length, IsEmail } from 'class-validator';
 import { Status } from '../../common/status.enum';
+import { Expose } from 'class-transformer';
 
 // Model-Relations
 import { Order } from '../../core/order/local/order.entity';
@@ -10,6 +11,12 @@ export class Technical {
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
+
+    // TODO: Probar funcionalidad de Expose en DTO
+    // @Expose()
+    // get text(): string {
+    //     return `${this.first_name} ${this.last_name}`;
+    // }
 
     @Column({ type: 'varchar', length: 75 })
     @MinLength(3, {

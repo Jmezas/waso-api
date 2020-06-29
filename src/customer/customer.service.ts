@@ -2,6 +2,8 @@ import { Injectable, Inject, BadRequestException, NotFoundException } from '@nes
 import { Repository } from 'typeorm';
 import { Customer } from './external/customer.entity';
 import { Status } from '../common/status.enum';
+import { CustomerSelectDTO } from './dtos/customer.select.dto';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class CustomerService {
@@ -32,6 +34,16 @@ export class CustomerService {
     }
 
     return customer;
+  }
+
+  async getCustomerSelect(): Promise<CustomerSelectDTO[]> {
+
+    const customers: Customer[] = await this.customerRepository.find({
+      where: { status: Status.ACTIVE }
+    });
+
+    return customers.map((customer: Customer) => plainToClass(CustomerSelectDTO, customer));
+
   }
 
 }
