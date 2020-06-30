@@ -1,11 +1,13 @@
 import { Injectable, Inject, BadRequestException, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Status } from 'src/common/status.enum';
+import { Status } from '../../common/status.enum';
+
+// Models
 import { Order } from './local/order.entity';
 import { User } from '../../user/local/user.entity';
-import { plainToClass } from 'class-transformer';
-import { ReadOrderDTO } from './dtos/read-order.dto';
-import { Customer } from '../../customer/external/customer.entity'
+import { HnEquipment } from '../templates/hn-equipment/local/hn-equipment.entity';
+import { HnComplementaryData } from '../templates/hn-equipment/local/hn-complementary-data.entity';
+import { HnTechnicalReport } from '../templates/hn-equipment/local/hn-technical-report.entity';
 
 @Injectable()
 export class OrderService {
@@ -17,7 +19,13 @@ export class OrderService {
         @Inject('ORDER_REPOSITORY')
         private orderRepository: Repository<Order>,
         @Inject('USER_REPOSITORY')
-        private userRepository: Repository<User>
+        private userRepository: Repository<User>,
+        @Inject('HN_EQUIPMENT_REPOSITORY')
+        private hneRespository: Repository<HnEquipment>,
+        @Inject('HN_COMPLEMENTARY_DATA_REPOSITORY')
+        private hncdRepository: Repository<HnComplementaryData>,
+        @Inject('HN_TECHNICAL_REPORT_REPOSITORY')
+        private hntrRepository: Repository<HnTechnicalReport>
     ) { }
 
     async getAll(): Promise<Order[]> {
@@ -90,6 +98,32 @@ export class OrderService {
             status: Status.INACTIVE
         });
 
+        /**
+         * Get HnEquipment/order_id
+         */
+        const hnEquipmentDb: HnEquipment[] = await this.hneRespository.find({
+            where: { order: id, status: Status.ACTIVE },
+            relations: ['order', 'equipment', 'hn_technical_report', 'hn_complementary_data']
+        });
+
+        /**
+         * Update status HnEquipment = 'INACTIVE'
+         */
+        await this.hneRespository.update(hnEquipmentDb[0].id, {
+            status: Status.INACTIVE
+        });
+
+        await this.hntrRepository.update(hnEquipmentDb[0].hn_technical_report.id, {
+            status: Status.INACTIVE
+        });
+
+        await this.hncdRepository.update(hnEquipmentDb[0].hn_complementary_data.id, {
+            status: Status.INACTIVE
+        });
+
+        /**
+         * return OrderDeleted
+         */
         const orderDeleted = await this.orderRepository.findOne(id);
 
         return orderDeleted;

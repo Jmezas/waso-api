@@ -118,22 +118,11 @@ export class HnEquipmentService {
             throw new NotFoundException('The requested resource was not found');
         }
 
-        await this.hneRespository.update(id, {
-            status: Status.INACTIVE
-        });
+        let hncdDeleted = await this.hncdRepository.delete(hnEquipmentDb.hn_complementary_data.id);
+        let hntrDeleted = await this.hntrRepository.delete(hnEquipmentDb.hn_technical_report.id);
+        let hneDeleted = await this.hneRespository.delete(hnEquipmentDb.id);
 
-        await this.hntrRepository.update(hnEquipmentDb.hn_technical_report.id, {
-            status: Status.INACTIVE
-        });
+        return hnEquipmentDb;
 
-        await this.hncdRepository.update(hnEquipmentDb.hn_complementary_data.id, {
-            status: Status.INACTIVE
-        });
-
-        const hnEquipmentDeleted = await this.hneRespository.findOne(id, {
-            relations: ['order', 'equipment', 'hn_technical_report', 'hn_complementary_data',]
-        });
-
-        return hnEquipmentDeleted;
     }
 }
