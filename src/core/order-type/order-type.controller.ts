@@ -1,4 +1,4 @@
-import { Controller, Get, Res, HttpStatus, Param, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Res, HttpStatus, Param, Post, Body, Put, Delete, Query } from '@nestjs/common';
 import { OrderTypeService } from './order-type.service';
 import { OrderType } from './local/order-type.entity';
 
@@ -13,12 +13,13 @@ export class OrderTypeController {
     ) { }
 
     @Get()
-    async getOrderTypes( @Res() res ) {
+    async getOrderTypes( @Res() res, @Query('skip') skip: number ) {
 
-        const orderTypes = await this._orderTypeService.getAll();
+        const [orderTypes, totalRecords] = await this._orderTypeService.getAll(skip);
 
         res.status(HttpStatus.OK).json({
-            orderTypes
+            orderTypes,
+            totalRecords
         });
     }
 

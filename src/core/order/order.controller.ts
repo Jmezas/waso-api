@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Res, Param, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Res, Param, Post, Body, Put, Delete, Query } from '@nestjs/common';
 
 import { OrderService } from './order.service';
 import { Order } from './local/order.entity';
@@ -14,12 +14,13 @@ export class OrderController {
     ) { }
 
     @Get()
-    async getOrders( @Res() res ) {
+    async getOrders( @Res() res, @Query('skip') skip: number ) {
 
-        const orders = await this._orderService.getAll();
+        const [orders, totalRecords] = await this._orderService.getAll(skip);
 
         res.status(HttpStatus.OK).json({
-            orders
+            orders,
+            totalRecords
         });
     }
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Res, HttpStatus, Param, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Res, HttpStatus, Param, Post, Body, Put, Delete, Query } from '@nestjs/common';
 import { EquipmentService } from './equipment.service';
 import { Equipment } from './local/equipment.entity';
 
@@ -13,12 +13,13 @@ export class EquipmentController {
     ) { }
 
     @Get()
-    async getEquipments( @Res() res ) {
+    async getEquipments( @Res() res, @Query('skip') skip: number ) {
 
-        const equipments = await this._equipmentService.getAll();
+        const [equipments, totalRecords] = await this._equipmentService.getAll(skip);
 
         res.status(HttpStatus.OK).json({
-            equipments
+            equipments,
+            totalRecords
         });
     }
 

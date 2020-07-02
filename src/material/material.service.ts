@@ -14,13 +14,15 @@ export class MaterialService {
         private materialRepository: Repository<Material>
     ) { }
 
-    async getAll(): Promise<Material[]> {
+    async getAll( skip: number ): Promise<[Material[], Number]> {
 
-        const materials = await this.materialRepository.find({
-            where: { status: Status.ACTIVE }
+        const [materials, totalRecords] = await this.materialRepository.findAndCount({
+            where: { status: Status.ACTIVE },
+            skip,
+            take: 10
         });
 
-        return materials;
+        return [materials, totalRecords];
     }
 
     async get(id: string): Promise<Material> {

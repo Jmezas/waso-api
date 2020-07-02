@@ -1,4 +1,4 @@
-import { Controller, Res, HttpStatus, Param, Get, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Res, HttpStatus, Param, Get, Post, Body, Put, Delete, Query } from '@nestjs/common';
 import { TechnicalService } from './technical.service';
 import { Technical } from './local/technical.entity';
 
@@ -13,12 +13,13 @@ export class TechnicalController {
     ) { }
 
     @Get()
-    async getTechnicians( @Res() res ) {
+    async getTechnicians( @Res() res, @Query('skip') skip: number ) {
 
-        const technicians = await this._technicalService.getAll();
+        const [technicians, totalRecords] = await this._technicalService.getAll(skip);
 
         res.status(HttpStatus.OK).json({
-            technicians
+            technicians,
+            totalRecords
         });
     }
 

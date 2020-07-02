@@ -10,13 +10,15 @@ export class RoleService {
     private roleRepository: Repository<Role>,
   ) {}
 
-  async getAll(): Promise<Role[]> {
+  async getAll( skip: number): Promise<[Role[], Number]> {
 
-    const roles: Role[] = await this.roleRepository.find({
-      where: { status: Status.ACTIVE }
+    const [roles, totalRecords] = await this.roleRepository.findAndCount({
+      where: { status: Status.ACTIVE },
+      skip,
+      take: 10
     });
 
-    return roles;
+    return [roles, totalRecords];
   }
 
   async get(id: string): Promise<Role> {

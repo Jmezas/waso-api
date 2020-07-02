@@ -28,14 +28,16 @@ export class OrderService {
         private hntrRepository: Repository<HnTechnicalReport>
     ) { }
 
-    async getAll(): Promise<Order[]> {
+    async getAll( skip: number ): Promise<[Order[], Number]> {
         
-        const orders: Order[] = await this.orderRepository.find({
+        const [orders, totalRecords] = await this.orderRepository.findAndCount({
             where: { status: Status.ACTIVE },
-            relations: [ 'technical', 'user', 'order_type', 'service_type' ]
+            relations: [ 'technical', 'user', 'order_type', 'service_type' ],
+            skip,
+            take: 10
         });
 
-        return orders;
+        return [orders, totalRecords];
 
     }
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Param, Post, Body, HttpStatus, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Res, Param, Post, Body, HttpStatus, Put, Delete, Query } from '@nestjs/common';
 
 import { UserService } from './user.service';
 import { User } from './local/user.entity';
@@ -16,12 +16,13 @@ export class UserController {
     ) { }
 
     @Get()
-    async getUsers( @Res() res ) {
+    async getUsers( @Res() res, @Query('skip') skip: number, @Query('all') all: string ) {
 
-        const users = await this._userService.getAll();
+        const [users, totalRecords] = await this._userService.getAll(skip, all);
 
         res.status(HttpStatus.OK).json({
-            users
+            users,
+            totalRecords
         });
 
     }

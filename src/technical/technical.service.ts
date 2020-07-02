@@ -15,13 +15,15 @@ export class TechnicalService {
         private technicalRepository: Repository<Technical>
     ) { }
 
-    async getAll(): Promise<Technical[]> {
+    async getAll( skip: number ): Promise<[Technical[], Number]> {
 
-        const technicians: Technical[] = await this.technicalRepository.find({
-            where: { status: Status.ACTIVE }
+        const [technicians, totalRecords] = await this.technicalRepository.findAndCount({
+            where: { status: Status.ACTIVE },
+            skip,
+            take: 10
         });
 
-        return technicians;
+        return [technicians, totalRecords];
     }
 
     // TODO: Servicio para selectAll

@@ -14,13 +14,15 @@ export class EquipmentService {
         private equipmentRepository: Repository<Equipment>
     ) { }
 
-    async getAll(): Promise<Equipment[]> {
+    async getAll( skip: number ): Promise<[Equipment[], Number]> {
 
-        const equipments = await this.equipmentRepository.find({
-            where: { status: Status.ACTIVE }
+        const [equipments, totalRecords] = await this.equipmentRepository.findAndCount({
+            where: { status: Status.ACTIVE },
+            skip,
+            take: 10
         });
 
-        return equipments;
+        return [equipments, totalRecords];
     }
 
     async get(id: string): Promise<Equipment> {

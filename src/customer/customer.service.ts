@@ -12,13 +12,15 @@ export class CustomerService {
     private customerRepository: Repository<Customer>,
   ) {}
 
-  async getAll(): Promise<Customer[]> {
+  async getAll( skip: number ): Promise<[Customer[], Number]> {
 
-    const customers: Customer[] = await this.customerRepository.find({
-      where: { status: Status.ACTIVE }
+    const [customers, totalRecords] = await this.customerRepository.findAndCount({
+      where: { status: Status.ACTIVE },
+      skip,
+      take: 10
     });
 
-    return customers;
+    return [customers, totalRecords];
   }
 
   async get(id: string): Promise<Customer> {

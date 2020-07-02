@@ -1,4 +1,4 @@
-import { Controller, Get, Res, HttpStatus, Param, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Res, HttpStatus, Param, Post, Body, Put, Delete, Query } from '@nestjs/common';
 import { ServiceTypeService } from './service-type.service';
 import { ServiceType } from './local/service-type.entity';
 
@@ -13,12 +13,13 @@ export class ServiceTypeController {
     ) { }
 
     @Get()
-    async getServiceTypes( @Res() res ) {
+    async getServiceTypes( @Res() res, @Query('skip') skip: number ) {
 
-        const serviceTypes = await this._serviceTypeService.getAll();
+        const [serviceTypes, totalRecords] = await this._serviceTypeService.getAll(skip);
 
         res.status(HttpStatus.OK).json({
-            serviceTypes
+            serviceTypes,
+            totalRecords
         });
     }
 

@@ -13,12 +13,14 @@ export class OrderTypeService {
     private orderTypeRepository: Repository<OrderType>
   ) {}
 
-  async getAll(): Promise<OrderType[]> {
-    const orderTypes: OrderType[] = await this.orderTypeRepository.find({
+  async getAll( skip: number ): Promise<[OrderType[], Number]> {
+    const [orderTypes, totalRecords] = await this.orderTypeRepository.findAndCount({
       where: { status: Status.ACTIVE },
+      skip,
+      take: 10
     });
 
-    return orderTypes;
+    return [orderTypes, totalRecords];
   }
 
   async get(id: string): Promise<OrderType> {

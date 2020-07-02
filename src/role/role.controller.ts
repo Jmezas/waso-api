@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Put, Delete, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, Res, HttpStatus, Query } from '@nestjs/common';
 import { RoleService } from './role.service';
 import { Role } from './local/role.entity';
 
@@ -13,12 +13,13 @@ export class RoleController {
     ) { }
 
     @Get()
-    async getRoles( @Res() res ) {
+    async getRoles( @Res() res, @Query('skip') skip: number ) {
 
-        const roles = await this._roleService.getAll();
+        const [roles, totalRecords] = await this._roleService.getAll(skip);
 
         res.status(HttpStatus.OK).json({
-            roles
+            roles,
+            totalRecords
         });
         
     }
