@@ -15,15 +15,42 @@ export class TechnicalService {
         private technicalRepository: Repository<Technical>
     ) { }
 
-    async getAll( skip: number ): Promise<[Technical[], Number]> {
+    async getAll( skip: number, all: string ): Promise<[Technical[], Number]> {
 
-        const [technicians, totalRecords] = await this.technicalRepository.findAndCount({
-            where: { status: Status.ACTIVE },
-            skip,
-            take: 10
-        });
+        if (!all) {
 
-        return [technicians, totalRecords];
+            const [technicians, totalRecords] = await this.technicalRepository.findAndCount({
+                where: { status: Status.ACTIVE },
+                skip,
+                take: 10
+            });
+    
+            return [technicians, totalRecords];
+
+        } else {
+
+            if (all === 'true') {
+
+                const [technicians, totalRecords] = await this.technicalRepository.findAndCount({
+                    skip,
+                    take: 10
+                });
+
+                return [technicians, totalRecords];
+
+            } else {
+
+                const [technicians, totalRecords] = await this.technicalRepository.findAndCount({
+                    where: { status: Status.ACTIVE },
+                    skip,
+                    take: 10
+                });
+
+                return [technicians, totalRecords];
+                
+            }
+        }
+
     }
 
     // TODO: Servicio para selectAll

@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Status } from '../../common/status.enum';
 import { HnEquipment } from '../../core/templates/hn-equipment/local/hn-equipment.entity';
+import { CustomerEquipment } from '../../customer-equipment/local/customer-equipment.entity';
 
 @Entity('equipments')
 export class Equipment {
@@ -28,5 +29,11 @@ export class Equipment {
         hn_equipment => hn_equipment.equipment
     )
     hn_equipments: HnEquipment[];
+
+    @OneToMany(
+        type => CustomerEquipment,
+        customer_equipment => customer_equipment.equipment
+    )
+    customer_equipments: CustomerEquipment[];
 
 }

@@ -13,14 +13,42 @@ export class OrderTypeService {
     private orderTypeRepository: Repository<OrderType>
   ) {}
 
-  async getAll( skip: number ): Promise<[OrderType[], Number]> {
-    const [orderTypes, totalRecords] = await this.orderTypeRepository.findAndCount({
-      where: { status: Status.ACTIVE },
-      skip,
-      take: 10
-    });
+  async getAll( skip: number, all: string ): Promise<[OrderType[], Number]> {
 
-    return [orderTypes, totalRecords];
+    if (!all) {
+
+      const [orderTypes, totalRecords] = await this.orderTypeRepository.findAndCount({
+        where: { status: Status.ACTIVE },
+        skip,
+        take: 10
+      });
+
+      return [orderTypes, totalRecords];
+    } else {
+
+      if (all === 'true') {
+
+        const [orderTypes, totalRecords] = await this.orderTypeRepository.findAndCount({
+          skip,
+          take: 10
+        });
+
+        return [orderTypes, totalRecords];
+
+      } else {
+
+        const [orderTypes, totalRecords] = await this.orderTypeRepository.findAndCount({
+          where: { status: Status.ACTIVE },
+          skip,
+          take: 10
+        });
+
+        return [orderTypes, totalRecords];
+
+      }
+      
+    }
+    
   }
 
   async get(id: string): Promise<OrderType> {

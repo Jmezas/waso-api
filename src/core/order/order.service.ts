@@ -1,5 +1,5 @@
 import { Injectable, Inject, BadRequestException, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Status } from '../../common/status.enum';
 
 // Models
@@ -8,6 +8,7 @@ import { User } from '../../user/local/user.entity';
 import { HnEquipment } from '../templates/hn-equipment/local/hn-equipment.entity';
 import { HnComplementaryData } from '../templates/hn-equipment/local/hn-complementary-data.entity';
 import { HnTechnicalReport } from '../templates/hn-equipment/local/hn-technical-report.entity';
+import { CustomerEquipment } from 'src/customer-equipment/local/customer-equipment.entity';
 
 @Injectable()
 export class OrderService {
@@ -25,19 +26,50 @@ export class OrderService {
         @Inject('HN_COMPLEMENTARY_DATA_REPOSITORY')
         private hncdRepository: Repository<HnComplementaryData>,
         @Inject('HN_TECHNICAL_REPORT_REPOSITORY')
-        private hntrRepository: Repository<HnTechnicalReport>
+        private hntrRepository: Repository<HnTechnicalReport>,
+        @Inject('CUSTOMER_EQUIPMENT_REPOSITORY')
+        private custEquipmentRepository: Repository<CustomerEquipment>
     ) { }
 
-    async getAll( skip: number ): Promise<[Order[], Number]> {
-        
-        const [orders, totalRecords] = await this.orderRepository.findAndCount({
-            where: { status: Status.ACTIVE },
-            relations: [ 'technical', 'user', 'order_type', 'service_type' ],
-            skip,
-            take: 10
-        });
+    async getAll( skip: number, all: string ): Promise<[Order[], Number]> {
 
-        return [orders, totalRecords];
+        if (!all) {
+
+            const [orders, totalRecords] = await this.orderRepository.findAndCount({
+                where: { status: Status.ACTIVE },
+                relations: ['technical', 'user', 'order_type', 'service_type'],
+                skip,
+                take: 10
+            });
+
+            return [orders, totalRecords];
+
+        } else {
+
+            if (all === 'true') {
+
+                const [orders, totalRecords] = await this.orderRepository.findAndCount({
+                    relations: ['technical', 'user', 'order_type', 'service_type'],
+                    skip,
+                    take: 10
+                });
+
+                return [orders, totalRecords];
+
+            } else {
+
+                const [orders, totalRecords] = await this.orderRepository.findAndCount({
+                    where: { status: Status.ACTIVE },
+                    relations: ['technical', 'user', 'order_type', 'service_type'],
+                    skip,
+                    take: 10
+                });
+
+                return [orders, totalRecords];
+                
+            }
+        }
+        
 
     }
 
@@ -105,7 +137,7 @@ export class OrderService {
          */
         const hnEquipmentDb: HnEquipment[] = await this.hneRespository.find({
             where: { order: id, status: Status.ACTIVE },
-            relations: ['order', 'equipment', 'hn_technical_report', 'hn_complementary_data']
+            relations: ['order', 'order.order_type', 'equipment', 'hn_technical_report', 'hn_complementary_data']
         });
 
         /**
@@ -122,6 +154,25 @@ export class OrderService {
         await this.hncdRepository.update(hnEquipmentDb[0].hn_complementary_data.id, {
             status: Status.INACTIVE
         });
+
+        /**
+         * Update status Customer Equipment = 'INACTIVE'
+         */
+        if (hnEquipmentDb[0].order.order_type.description === 'Instalación') {
+
+            // TODO: obtener la orden que originó la instalación de este equipo al cliente
+            const customerEquipment = await this.custEquipmentRepository.find({
+                where: {
+                    customer_id: hnEquipmentDb[0].order.customer_id,
+                    equipment: hnEquipmentDb[0].equipment
+                }
+            });
+
+            await this.custEquipmentRepository.update(customerEquipment[0].id, {
+                status: Status.INACTIVE
+            });
+        }
+
 
         /**
          * return OrderDeleted

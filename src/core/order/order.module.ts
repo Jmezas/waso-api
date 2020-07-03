@@ -6,6 +6,7 @@ import { userProviders } from '../../user/user.provider';
 import { hnEequipmentProviders } from '../templates/hn-equipment/hn-equipment.provider';
 
 import { DatabaseModule } from '../../database/database.module';
+import { customerEquipmentProviders } from 'src/customer-equipment/customer-equipment.provider';
 
 @Module({
   imports: [DatabaseModule],
@@ -13,6 +14,7 @@ import { DatabaseModule } from '../../database/database.module';
     ...orderProviders, 
     ...userProviders, 
     ...hnEequipmentProviders,
+    ...customerEquipmentProviders,
     OrderService
   ],
   controllers: [OrderController]

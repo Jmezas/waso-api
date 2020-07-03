@@ -13,9 +13,9 @@ export class OrderTypeController {
     ) { }
 
     @Get()
-    async getOrderTypes( @Res() res, @Query('skip') skip: number ) {
+    async getOrderTypes( @Res() res, @Query('skip') skip: number, @Query('all') all: string ) {
 
-        const [orderTypes, totalRecords] = await this._orderTypeService.getAll(skip);
+        const [orderTypes, totalRecords] = await this._orderTypeService.getAll(skip, all);
 
         res.status(HttpStatus.OK).json({
             orderTypes,

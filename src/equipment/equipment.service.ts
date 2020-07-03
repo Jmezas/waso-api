@@ -1,7 +1,7 @@
 import { Injectable, Inject, BadRequestException, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Equipment } from './local/equipment.entity';
-import { Status } from 'src/common/status.enum';
+import { Status } from '../common/status.enum';
 
 @Injectable()
 export class EquipmentService {
@@ -14,15 +14,42 @@ export class EquipmentService {
         private equipmentRepository: Repository<Equipment>
     ) { }
 
-    async getAll( skip: number ): Promise<[Equipment[], Number]> {
+    async getAll( skip: number, all: string ): Promise<[Equipment[], Number]> {
 
-        const [equipments, totalRecords] = await this.equipmentRepository.findAndCount({
-            where: { status: Status.ACTIVE },
-            skip,
-            take: 10
-        });
+        if (!all) {
 
-        return [equipments, totalRecords];
+            const [equipments, totalRecords] = await this.equipmentRepository.findAndCount({
+                where: { status: Status.ACTIVE },
+                skip,
+                take: 10
+            });
+
+            return [equipments, totalRecords];
+
+        } else {
+
+            if (all === 'true') {
+
+                const [equipments, totalRecords] = await this.equipmentRepository.findAndCount({
+                    skip,
+                    take: 10
+                });
+
+                return [equipments, totalRecords];
+
+            } else {
+
+                const [equipments, totalRecords] = await this.equipmentRepository.findAndCount({
+                    where: { status: Status.ACTIVE },
+                    skip,
+                    take: 10
+                });
+
+                return [equipments, totalRecords];
+                
+            }
+        }
+
     }
 
     async get(id: string): Promise<Equipment> {

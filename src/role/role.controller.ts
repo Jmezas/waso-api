@@ -13,9 +13,9 @@ export class RoleController {
     ) { }
 
     @Get()
-    async getRoles( @Res() res, @Query('skip') skip: number ) {
+    async getRoles( @Res() res, @Query('skip') skip: number, @Query('all') all: string ) {
 
-        const [roles, totalRecords] = await this._roleService.getAll(skip);
+        const [roles, totalRecords] = await this._roleService.getAll(skip, all);
 
         res.status(HttpStatus.OK).json({
             roles,

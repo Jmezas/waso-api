@@ -14,14 +14,41 @@ export class ServiceTypeService {
         private serviceTypeRepository: Repository<ServiceType>
     ) { }
 
-    async getAll( skip: number ): Promise<[ServiceType[], Number]> {
-        const [serviceTypes, totalRecords] = await this.serviceTypeRepository.findAndCount({
-            where: { status: Status.ACTIVE },
-            skip,
-            take: 10
-        });
+    async getAll( skip: number, all: string ): Promise<[ServiceType[], Number]> {
 
-        return [serviceTypes, totalRecords];
+        if (!all) {
+
+            const [serviceTypes, totalRecords] = await this.serviceTypeRepository.findAndCount({
+                where: { status: Status.ACTIVE },
+                skip,
+                take: 10
+            });
+
+            return [serviceTypes, totalRecords];
+
+        } else {
+
+            if (all === 'true') {
+
+                const [serviceTypes, totalRecords] = await this.serviceTypeRepository.findAndCount({
+                    skip,
+                    take: 10
+                });
+
+                return [serviceTypes, totalRecords];
+
+            } else {
+
+                const [serviceTypes, totalRecords] = await this.serviceTypeRepository.findAndCount({
+                    where: { status: Status.ACTIVE },
+                    skip,
+                    take: 10
+                });
+
+                return [serviceTypes, totalRecords];
+            }
+        }
+        
     }
 
     async get(id: string): Promise<ServiceType> {
