@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { Status } from '../../common/status.enum';
 import { HnEquipment } from '../../core/templates/hn-equipment/local/hn-equipment.entity';
 import { CustomerEquipment } from '../../customer-equipment/local/customer-equipment.entity';
+import { ServiceType } from '../../core/service-type/local/service-type.entity';
 
 @Entity('equipments')
 export class Equipment {
@@ -23,6 +24,16 @@ export class Equipment {
 
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
+
+    @ManyToOne(
+        type => ServiceType,
+        service_type => service_type.equipments,
+        {
+            nullable: false
+        }
+    )
+    @JoinColumn({ name: 'service_type_id' })
+    service_type: ServiceType
 
     @OneToMany(
         type => HnEquipment,

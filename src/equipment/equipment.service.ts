@@ -20,6 +20,7 @@ export class EquipmentService {
 
             const [equipments, totalRecords] = await this.equipmentRepository.findAndCount({
                 where: { status: Status.ACTIVE },
+                relations: ['service_type', 'customer_equipments'],
                 skip,
                 take: 10
             });
@@ -31,6 +32,7 @@ export class EquipmentService {
             if (all === 'true') {
 
                 const [equipments, totalRecords] = await this.equipmentRepository.findAndCount({
+                    relations: ['service_type', 'customer_equipments'],
                     skip,
                     take: 10
                 });
@@ -41,6 +43,7 @@ export class EquipmentService {
 
                 const [equipments, totalRecords] = await this.equipmentRepository.findAndCount({
                     where: { status: Status.ACTIVE },
+                    relations: ['service_type', 'customer_equipments'],
                     skip,
                     take: 10
                 });
@@ -49,6 +52,19 @@ export class EquipmentService {
                 
             }
         }
+
+    }
+
+    async getByServiceType( service_type_id: string ): Promise<Equipment[]> {
+
+        const equipments = await this.equipmentRepository.find({
+            where: { 
+                status: Status.ACTIVE,
+                service_type: service_type_id
+            }
+        });
+
+        return equipments;
 
     }
 

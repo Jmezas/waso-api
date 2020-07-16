@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Status } from '../../../common/status.enum';
 import { Order } from '../../order/local/order.entity';
+import { Equipment } from '../../../equipment/local/equipment.entity';
 
 @Entity('service_types')
 export class ServiceType {
@@ -31,5 +32,11 @@ export class ServiceType {
         order => order.service_type
     )
     orders: Order[];
+
+    @OneToMany(
+        type => Equipment,
+        equipment => equipment.service_type
+    )
+    equipments: Equipment[];
 
 }

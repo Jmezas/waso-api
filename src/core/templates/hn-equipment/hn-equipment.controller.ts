@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Param, HttpStatus, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Res, Param, HttpStatus, Post, Body, Put, Delete, Query } from '@nestjs/common';
 import { HnEquipmentService } from './hn-equipment.service';
 import { HnEquipmentDTO } from './dtos/hn-equipment.dto';
 
@@ -12,10 +12,23 @@ export class HnEquipmentController {
         private readonly _hnEquipmentService: HnEquipmentService
     ) { }
 
+    // order/hn-equipment/:order_id
     @Get('/:order_id')
     async getHnEquipment( @Res() res, @Param('order_id') order_id: string ) {
 
         const hnEquipment = await this._hnEquipmentService.get(order_id);
+
+        res.status(HttpStatus.OK).json({
+            hnEquipment
+        });
+    }
+
+    // order/hn-equipment/customer/:customer_id/equipment/:equipment_id
+    // order/hn-equipment/?customer_id=5698962653915&equipment_id=56359812339
+    @Get('')
+    async getHnEquipmentCustomer(@Res() res, @Query('customer') customer_id: string, @Query('equipment') equipment_id: string) {
+
+        const hnEquipment = await this._hnEquipmentService.getByCustomer(customer_id, equipment_id);
 
         res.status(HttpStatus.OK).json({
             hnEquipment

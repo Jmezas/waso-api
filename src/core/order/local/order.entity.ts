@@ -70,6 +70,17 @@ export class Order {
     user: User;
 
     @ManyToOne(
+        type => User,
+        user => user.orders,
+        {
+            nullable: true
+        }
+    )
+    @JoinColumn({ name: 'responsable_user_id' })
+    responsable_user: User;
+
+
+    @ManyToOne(
         type => OrderType,
         order_type => order_type.orders,
         {

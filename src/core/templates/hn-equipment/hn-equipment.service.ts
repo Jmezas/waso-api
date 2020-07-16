@@ -1,12 +1,12 @@
 import { Injectable, Inject, BadRequestException, NotFoundException } from '@nestjs/common';
-import { Repository, Transaction, TransactionManager, EntityManager } from 'typeorm';
+import { Repository, Transaction, TransactionManager, EntityManager, Not, createQueryBuilder, getRepository } from 'typeorm';
 import { Status } from '../../../common/status.enum';
 
 import { HnEquipment } from './local/hn-equipment.entity';
 import { HnComplementaryData } from './local/hn-complementary-data.entity';
 import { HnTechnicalReport } from './local/hn-technical-report.entity';
-import { OrderType } from 'src/core/order-type/local/order-type.entity';
 import { CustomerEquipment } from '../../../customer-equipment/local/customer-equipment.entity';
+import { Order } from '../../order/local/order.entity';
 
 // DTO's
 import { HnEquipmentDTO } from './dtos/hn-equipment.dto';
@@ -25,7 +25,9 @@ export class HnEquipmentService {
         @Inject('HN_TECHNICAL_REPORT_REPOSITORY')
         private hntrRepository: Repository<HnTechnicalReport>,
         @Inject('CUSTOMER_EQUIPMENT_REPOSITORY')
-        private custEquipmentRepository: Repository<CustomerEquipment>
+        private custEquipmentRepository: Repository<CustomerEquipment>,
+        @Inject('ORDER_REPOSITORY')
+        private orderRepository: Repository<HnTechnicalReport>
     ) { }
 
     async get(order_id: string): Promise<HnEquipment[]> {
@@ -39,33 +41,39 @@ export class HnEquipmentService {
 
     }
 
+    async getByCustomer(customer_id: string, equipment_id: string): Promise<HnEquipment> {
+
+        const hnEquipment: any = await this.hneRespository
+            .createQueryBuilder('hne')
+            .innerJoinAndSelect('hne.hn_technical_report', 'hntr')
+            .innerJoinAndSelect('hne.hn_complementary_data', 'hncd')
+            .innerJoinAndSelect('hne.order', 'order')
+            .innerJoinAndSelect('hne.equipment', 'equipment')
+            .where('order.customer_id = :customer_id', { customer_id })
+            .andWhere('hne.equipment = :equipment_id',  { equipment_id })
+            .orderBy('hne.created_at', 'DESC')
+            .getOne();
+
+        return hnEquipment;
+
+    }
+
+
     @Transaction() // TODO: desarrollar la transaccionalidad de las operaciones
     async create( hneDTO: HnEquipmentDTO, @TransactionManager() manager?: EntityManager ) {
 
+        console.log(hneDTO);
+
         // let hneCreated = await manager.save(hneDTO.hn_equipment);
         let hneCreated = await this.hneRespository.save(hneDTO.hn_equipment);
-        let hntrCreated = null;
-        let hncdCreated = null
 
-        if (hneDTO.hn_technical_report) {
-            hneDTO.hn_technical_report.hn_equipment = hneCreated;
-            hntrCreated = await this.hntrRepository.save(hneDTO.hn_technical_report);
-        } else {
-            let hntr = new HnTechnicalReport();
-            hntr.hn_equipment = hneCreated;
-            hntrCreated = await this.hntrRepository.save(hntr);
-        }
+        hneDTO.hn_technical_report.hn_equipment = hneCreated;
+        let hntrCreated = await this.hntrRepository.save(hneDTO.hn_technical_report);
 
-        if (hneDTO.hn_complementary_data) {
-            hneDTO.hn_complementary_data.hn_equipment = hneCreated;
-            hncdCreated = await this.hncdRepository.save(hneDTO.hn_complementary_data);
-        } else {
-            let hncd = new HnComplementaryData();
-            hncd.hn_equipment = hneCreated;
-            hncdCreated = await this.hncdRepository.save(hncd);
-        }
-
-        // Buscar el tipo de orden y crear en la tabla customer_equipments en caso sea un servicio de instalación
+        hneDTO.hn_complementary_data.hn_equipment = hneCreated;
+        let hncdCreated = await this.hncdRepository.save(hneDTO.hn_complementary_data);
+            
+        // Buscar el tipo de orden y crea en la tabla customer_equipments en caso sea un servicio de instalación
         if (hneDTO.hn_equipment.order.order_type.description === 'Instalación') {
 
             const customerEquipmentCreated = await this.custEquipmentRepository.save({
@@ -74,6 +82,8 @@ export class HnEquipmentService {
             });
 
         }
+
+        console.log(hneCreated, hntrCreated, hncdCreated);
 
         return {
             hneCreated,
@@ -136,6 +146,10 @@ export class HnEquipmentService {
         const hntrDeleted = await this.hntrRepository.delete(hnEquipmentDb.hn_technical_report.id);
         const hneDeleted = await this.hneRespository.delete(hnEquipmentDb.id);
 
+        /* TODO: Analizar con el equipo si una orden de serivicio instalación no puede eliminarse
+                 Toda vez ya existan más ordenes de servicio asociadas al equipo
+                 Esto para no perder el trace de las ordenes de servicio 
+        */
         if (hnEquipmentDb.order.order_type.description === 'Instalación') {
 
             // TODO: obtener la orden que originó la instalación de este equipo al cliente

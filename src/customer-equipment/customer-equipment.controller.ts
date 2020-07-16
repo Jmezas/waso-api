@@ -1,4 +1,4 @@
-import { Controller, Get, Res, HttpStatus, Param } from '@nestjs/common';
+import { Controller, Get, Res, HttpStatus, Param, Post, Body, Delete } from '@nestjs/common';
 import { CustomerEquipmentService } from './customer-equipment.service';
 import { CustomerEquipment } from './local/customer-equipment.entity';
 
@@ -20,6 +20,28 @@ export class CustomerEquipmentController {
         res.status(HttpStatus.OK).json({
             customerEquipments
         });
+    }
+
+    @Post()
+    async createCustomerEquipment( @Res() res, @Body() customerEquipment: CustomerEquipment ) {
+
+        const customerEquipmentCreated = await this._customerEquipmentService.createCustomerEquipment(customerEquipment);
+
+        res.status(HttpStatus.CREATED).json({
+            customerEquipmentCreated
+        });
+        
+    }
+
+    @Delete('/:id')
+    async deleteCustomerEquipment( @Res() res, @Param('id') id: string ) {
+
+        const customerEquipmentDeleted = await this._customerEquipmentService.deleteCustomerEquipment(id);
+
+        res.status(HttpStatus.OK).json({
+            customerEquipmentDeleted
+        });
+
     }
 
 }

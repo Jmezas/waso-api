@@ -23,6 +23,16 @@ export class EquipmentController {
         });
     }
 
+    @Get('/:service_type')
+    async getEquipmentsByServiceType(@Res() res, @Param('service_type') service_type: string) {
+
+        const equipments = await this._equipmentService.getByServiceType(service_type);
+
+        res.status(HttpStatus.OK).json({
+            equipments
+        });
+    }
+
     @Get('/:id')
     async getEquipment( @Res() res, @Param('id') id: string ) {
 
