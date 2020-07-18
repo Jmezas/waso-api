@@ -12,14 +12,19 @@ import { CustomerEquipmentModule } from './customer-equipment/customer-equipment
 import { CoreModule } from './core/core.module';
 import configuration from './config/configuration';
 // import { Moment } from 'moment';
-import moment = require('moment');
-
+// import moment = require('moment');
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal: true,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public/'),
+      exclude: ['api/v1*'],
     }),
     UserModule,
     CustomerModule,

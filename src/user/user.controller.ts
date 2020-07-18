@@ -1,87 +1,97 @@
-import { Controller, Get, Res, Param, Post, Body, HttpStatus, Put, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Res,
+  Param,
+  Post,
+  Body,
+  HttpStatus,
+  Put,
+  Delete,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 
 import { UserService } from './user.service';
 import { User } from './local/user.entity';
 
 import { validate } from 'class-validator';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../role/decorators/roles.decorator';
+import { RolesGuard } from '../role/guards/roles.guard';
 
 @Controller('users')
 export class UserController {
+  constructor(private readonly _userService: UserService) {}
 
-    /**
-     *
-     */
-    constructor(
-        private readonly _userService: UserService
-    ) { }
+  //@UseGuards(AuthGuard())
+  @Get()
+  async getUsers(
+    @Res() res,
+    @Query('skip') skip: number,
+    @Query('all') all: string,
+  ) {
+    const [users, totalRecords] = await this._userService.getAll(skip, all);
 
-    @Get()
-    async getUsers( @Res() res, @Query('skip') skip: number, @Query('all') all: string ) {
+    res.status(HttpStatus.OK).json({
+      users,
+      totalRecords,
+    });
+  }
 
-        const [users, totalRecords] = await this._userService.getAll(skip, all);
+  @Get('/:id')
+  // @Roles('ADMIN', 'OTRO_ROLE') // Ojo a este cambio por roles
+  // @UseGuards(AuthGuard(), RolesGuard) // Ojo a este por la autorización con roles
+  async getUser(@Res() res, @Param('id') id: string) {
+    const user = await this._userService.get(id);
 
-        res.status(HttpStatus.OK).json({
-            users,
-            totalRecords
-        });
+    res.status(HttpStatus.OK).json({
+      user,
+    });
+  }
 
-    }
+  // TODO: Luego se realizará refactor para crear el registro de usuarios en el modulo auth
+  @Post()
+  async create(@Res() res, @Body() user: User) {
+    // validate(user).then(errors => { // errors is an array of validation errors
+    //     if (errors.length > 0) {
 
-    @Get('/:id')
-    async getUser( @Res() res, @Param('id') id: string ) {
+    //         console.log('Validate errors', errors);
 
-        const user = await this._userService.get(id);
+    //         return res.status(HttpStatus.BAD_REQUEST).json({
+    //             message: 'error',
+    //             errors
+    //         });
+    //     } else {
+    //         console.log('No ingrese al IF de errors');
+    //     }
+    // });
 
-        res.status(HttpStatus.OK).json({
-            user
-        });
-    }
+    const userCreated = await this._userService.create(user);
 
-    // TODO: Luego se realizará refactor para crear el registro de usuarios en el modulo auth
-    @Post()
-    async create( @Res() res, @Body() user: User ) {
+    res.status(HttpStatus.CREATED).json({
+      message: 'User successfully created',
+      userCreated,
+    });
+  }
 
-        // validate(user).then(errors => { // errors is an array of validation errors
-        //     if (errors.length > 0) {
+  @Put('/:id')
+  async update(@Res() res, @Param('id') id: string, @Body() user: User) {
+    const userUpdated = await this._userService.update(id, user);
 
-        //         console.log('Validate errors', errors);
+    res.status(HttpStatus.OK).json({
+      message: 'User successfully updated',
+      userUpdated,
+    });
+  }
 
-        //         return res.status(HttpStatus.BAD_REQUEST).json({
-        //             message: 'error',
-        //             errors
-        //         });
-        //     } else {
-        //         console.log('No ingrese al IF de errors');
-        //     }
-        // });
+  @Delete('/:id')
+  async delete(@Res() res, @Param('id') id: string) {
+    const userDeleted = await this._userService.delete(id);
 
-        const userCreated = await this._userService.create(user);
-
-        res.status(HttpStatus.CREATED).json({
-            message: 'User successfully created',
-            userCreated
-        });
-    }
-
-    @Put('/:id')
-    async update( @Res() res, @Param('id') id: string, @Body() user: User ) {
-
-        const userUpdated = await this._userService.update(id, user);
-
-        res.status(HttpStatus.OK).json({
-            message: 'User successfully updated',
-            userUpdated
-        });
-    }
-
-    @Delete('/:id')
-    async delete( @Res() res, @Param('id') id: string ) {
-
-        const userDeleted = await this._userService.delete(id);
-
-        res.status(HttpStatus.OK).json({
-            message: 'User successfully deleted',
-            userDeleted
-        });
-    }
+    res.status(HttpStatus.OK).json({
+      message: 'User successfully deleted',
+      userDeleted,
+    });
+  }
 }
