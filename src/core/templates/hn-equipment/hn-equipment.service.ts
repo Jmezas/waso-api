@@ -83,8 +83,6 @@ export class HnEquipmentService {
 
         }
 
-        console.log(hneCreated, hntrCreated, hncdCreated);
-
         return {
             hneCreated,
             hntrCreated,

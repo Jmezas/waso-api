@@ -20,11 +20,12 @@ import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../role/decorators/roles.decorator';
 import { RolesGuard } from '../role/guards/roles.guard';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('users')
 export class UserController {
   constructor(private readonly _userService: UserService) {}
 
-  //@UseGuards(AuthGuard())
+  // @UseGuards(AuthGuard('jwt'))
   @Get()
   async getUsers(
     @Res() res,
@@ -40,8 +41,8 @@ export class UserController {
   }
 
   @Get('/:id')
-  // @Roles('ADMIN', 'OTRO_ROLE') // Ojo a este cambio por roles
-  // @UseGuards(AuthGuard(), RolesGuard) // Ojo a este por la autorización con roles
+  // @Roles('ADMIN', 'SUPERVISOR') // Ojo a este cambio por roles
+  // @UseGuards(AuthGuard('jwt'), RolesGuard) // Ojo a este por la autorización con roles
   async getUser(@Res() res, @Param('id') id: string) {
     const user = await this._userService.get(id);
 

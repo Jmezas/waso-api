@@ -1,9 +1,8 @@
-import { Role } from '../../role/local/role.entity';
+// import { Role } from '../../role/local/role.entity';
 
 export interface IJwtPayload {
   id: string;
   username: string;
-  email: string;
-  role: Role;
+  role: string;
   iat?: Date;
 }

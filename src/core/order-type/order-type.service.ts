@@ -1,7 +1,7 @@
 import { Injectable, Inject, BadRequestException, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { OrderType } from './local/order-type.entity';
-import { Status } from 'src/common/status.enum';
+import { Status } from '../../common/status.enum';
 
 @Injectable()
 export class OrderTypeService {

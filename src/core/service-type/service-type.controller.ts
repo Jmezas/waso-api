@@ -1,7 +1,9 @@
-import { Controller, Get, Res, HttpStatus, Param, Post, Body, Put, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Res, HttpStatus, Param, Post, Body, Put, Delete, Query, UseGuards } from '@nestjs/common';
 import { ServiceTypeService } from './service-type.service';
 import { ServiceType } from './local/service-type.entity';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('service-types')
 export class ServiceTypeController {
 

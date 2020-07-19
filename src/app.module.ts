@@ -35,7 +35,7 @@ import { join } from 'path';
     DatabaseModule,
     EquipmentModule,
     CustomerEquipmentModule,
-    CoreModule,
+    CoreModule
   ],
 })
 export class AppModule {}

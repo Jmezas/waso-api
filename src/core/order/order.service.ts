@@ -86,9 +86,6 @@ export class OrderService {
 
     async create(order: Order): Promise<Order> {
 
-        // TODO: esta asignación debe eliminarse al tener la gestión de usuarios en el frontend
-        order.user = await this.userRepository.findOne('7309a463-2eb7-4569-8b80-1913305de8f8');
-
         if (!order.responsable_user) {
             order.responsable_user = order.user;
         }

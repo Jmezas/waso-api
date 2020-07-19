@@ -1,7 +1,9 @@
-import { Controller, Get, Res, HttpStatus, Param, Post, Body, Put, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Res, HttpStatus, Param, Post, Body, Put, Delete, Query, UseGuards } from '@nestjs/common';
 import { OrderTypeService } from './order-type.service';
 import { OrderType } from './local/order-type.entity';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('order-types')
 export class OrderTypeController {
 

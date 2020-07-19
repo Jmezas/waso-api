@@ -11,7 +11,7 @@ export class HnTechnicalReport {
     @Column({ type: 'boolean', default: false })
     manometer: boolean;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     pressure_range: number;
 
     @Column({ type: 'varchar', length: 100, nullable: true })
@@ -35,10 +35,10 @@ export class HnTechnicalReport {
     @Column({ type: 'varchar', length: 100, nullable: true })
     model: string;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     gallon_capacity: number;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     calibration: number;
 
     @Column({ type: 'boolean', default: false })
@@ -62,7 +62,7 @@ export class HnTechnicalReport {
     @Column({ type: 'boolean', default: false })
     float: boolean;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     float_measure: number;
 
     @Column({ type: 'boolean', default: false })

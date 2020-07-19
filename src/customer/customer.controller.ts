@@ -1,49 +1,44 @@
-import { Controller, Get, Param, Res, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, Param, Res, HttpStatus, Query, UseGuards } from '@nestjs/common';
 
 // Services
 import { CustomerService } from './customer.service';
 
+// Guards
+import { AuthGuard } from '@nestjs/passport';
+
+@UseGuards(AuthGuard('jwt'))
 @Controller('customers')
 export class CustomerController {
+  /**
+   *
+   */
+  constructor(private readonly _customerService: CustomerService) {}
 
-    /**
-     *
-     */
-    constructor(
-        private readonly _customerService: CustomerService
-    ) { }
+  @Get()
+  async getCustomers(@Res() res, @Query('skip') skip: number) {
+    const [customers, totalRecords] = await this._customerService.getAll(skip);
 
-    @Get()
-    async getCustomers( @Res() res, @Query('skip') skip: number ) {
+    res.status(HttpStatus.OK).json({
+      customers,
+      totalRecords,
+    });
+  }
 
-        const [customers, totalRecords] = await this._customerService.getAll(skip);
+  @Get('/select')
+  async getCustomersSelect(@Res() res) {
+    const customers = await this._customerService.getCustomerSelect();
 
-        res.status(HttpStatus.OK).json({
-            customers,
-            totalRecords
-        });
+    res.status(HttpStatus.OK).json({
+      customers,
+    });
+  }
 
-    }
+  @Get('/:id')
+  async get(@Res() res, @Param('id') id: string) {
+    const customer = await this._customerService.get(id);
 
-    @Get('/select')
-    async getCustomersSelect(@Res() res) {
-
-        const customers = await this._customerService.getCustomerSelect();
-
-        res.status(HttpStatus.OK).json({
-            customers
-        });
-
-    }
-
-    @Get('/:id')
-    async get( @Res() res,  @Param('id') id: string ) {
-
-        const customer = await this._customerService.get(id);
-
-        res.status(HttpStatus.OK).json({
-            customer
-        });
-    }
-
+    res.status(HttpStatus.OK).json({
+      customer,
+    });
+  }
 }

@@ -1,6 +1,8 @@
-import { Controller, Res, HttpStatus, Param, Get, Query } from '@nestjs/common';
+import { Controller, Res, HttpStatus, Param, Get, Query, UseGuards } from '@nestjs/common';
 import { MaterialService } from './material.service';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('materials')
 export class MaterialController {
 

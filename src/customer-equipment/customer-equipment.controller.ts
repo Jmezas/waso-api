@@ -1,7 +1,9 @@
-import { Controller, Get, Res, HttpStatus, Param, Post, Body, Delete } from '@nestjs/common';
+import { Controller, Get, Res, HttpStatus, Param, Post, Body, Delete, UseGuards } from '@nestjs/common';
 import { CustomerEquipmentService } from './customer-equipment.service';
 import { CustomerEquipment } from './local/customer-equipment.entity';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('customer-equipments')
 export class CustomerEquipmentController {
 

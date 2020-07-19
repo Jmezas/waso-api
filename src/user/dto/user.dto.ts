@@ -2,7 +2,7 @@ import { Exclude, Expose } from 'class-transformer';
 import { IsString, IsNumber } from 'class-validator';
 
 import { Status } from '../../common/status.enum';
-import { Role } from 'src/role/local/role.entity';
+import { Role } from '../../role/local/role.entity';
 
 @Exclude()
 export class UserDTO {

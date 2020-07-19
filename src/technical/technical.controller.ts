@@ -1,7 +1,9 @@
-import { Controller, Res, HttpStatus, Param, Get, Post, Body, Put, Delete, Query } from '@nestjs/common';
+import { Controller, Res, HttpStatus, Param, Get, Post, Body, Put, Delete, Query, UseGuards } from '@nestjs/common';
 import { TechnicalService } from './technical.service';
 import { Technical } from './local/technical.entity';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('technicians')
 export class TechnicalController {
 

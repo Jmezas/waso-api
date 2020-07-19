@@ -11,40 +11,40 @@ export class HnComplementaryData {
     @Column({ type: 'boolean', default: false })
     outdoor_equipment: boolean;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     cistern_height: number;
 
     @Column({ type: 'int', nullable: true })
     cistern_width: number;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     cistern_length: number;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     watertank_capacity: number;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     suction_pipe_size: number;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     discharge_pipe_size: number;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     booth_height: number;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     booth_width: number;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     booth_depth: number;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     door_height: number;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     door_width: number;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     door_depth: number;
 
     @Column({ type: 'boolean', default: false })

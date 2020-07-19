@@ -2,6 +2,7 @@ import { Injectable, Inject, BadRequestException, NotFoundException, Delete } fr
 import { Repository } from 'typeorm';
 import { User } from './local/user.entity';
 import { Status } from '../common/status.enum';
+import { genSalt, hash } from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -71,6 +72,9 @@ export class UserService {
     }
 
     async create(user: User): Promise<User> {
+
+        let salt = await genSalt(10);
+        user.password = await hash(user.password, salt);
 
         const userCreated = await this.userRepository.save(user);
 

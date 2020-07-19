@@ -1,7 +1,9 @@
-import { Controller, Get, Res, HttpStatus, Param, Post, Body, Put, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Res, HttpStatus, Param, Post, Body, Put, Delete, Query, UseGuards } from '@nestjs/common';
 import { EquipmentService } from './equipment.service';
 import { Equipment } from './local/equipment.entity';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('equipments')
 export class EquipmentController {
 

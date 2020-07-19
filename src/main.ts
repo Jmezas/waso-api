@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Logger } from '@nestjs/common';
 
-import * as csurf from 'csurf';
+// import * as csurf from 'csurf';
 import * as compression from 'compression';
 import * as helmet from 'helmet';
 import * as rateLimit from 'express-rate-limit';
@@ -11,6 +11,7 @@ import * as rateLimit from 'express-rate-limit';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = process.env.PORT || 5000;
+  app.setGlobalPrefix('/api/v1');
   const options = new DocumentBuilder()
     .setTitle('Work and Service Orders - WASO')
     .setDescription(
@@ -41,13 +42,13 @@ async function bootstrap() {
   app.use(compression());
   app.use(helmet());
   app.enableCors();
-  app.use(csurf());
-  app.use(
+  // app.use(csurf());
+  /* app.use(
     rateLimit({
       windowMs: 15 * 60 * 1000, // 15 minutes
       max: 100, // limit each IP to 100 requests per windowMs
     }),
-  );
+  ); */
 
   await app.listen(port);
   Logger.log(
