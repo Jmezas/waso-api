@@ -5,6 +5,6 @@ export const customerProviders = [
   {
     provide: 'CUSTOMER_REPOSITORY',
     useFactory: (connection: Connection) => connection.getRepository(Customer),
-    inject: ['EXTERNAL_CONNECTION'],
+    inject: ['A_LOCAL_CONNECTION'],
   },
 ];

@@ -24,7 +24,7 @@ import { join } from 'path';
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public/'),
-      exclude: ['api/v1*'],
+      exclude: ['api*'],
     }),
     UserModule,
     CustomerModule,

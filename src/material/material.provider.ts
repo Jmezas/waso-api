@@ -5,6 +5,6 @@ export const materialProviders = [
     {
         provide: 'MATERIAL_REPOSITORY',
         useFactory: (connection: Connection) => connection.getRepository(Material),
-        inject: ['EXTERNAL_CONNECTION'],
+        inject: ['A_LOCAL_CONNECTION'],
     },
 ];

@@ -16,7 +16,8 @@ export class Material {
     @Column({ type: 'varchar', length: 100 })
     category: string;
 
-    @Column({ type: 'varchar', enum: Status, default: Status.ACTIVE, length: 25 })
+    // @Column({ type: 'varchar', enum: Status, default: Status.ACTIVE, length: 25 })
+    @Column({ type: 'enum', enum: Status, default: Status.ACTIVE })
     status: string;
 
 }
