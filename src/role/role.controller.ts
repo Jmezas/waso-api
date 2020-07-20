@@ -3,7 +3,7 @@ import { RoleService } from './role.service';
 import { Role } from './local/role.entity';
 import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 @Controller('roles')
 export class RoleController {
 
