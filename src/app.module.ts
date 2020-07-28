@@ -10,9 +10,8 @@ import { DatabaseModule } from './database/database.module';
 import { EquipmentModule } from './equipment/equipment.module';
 import { CustomerEquipmentModule } from './customer-equipment/customer-equipment.module';
 import { CoreModule } from './core/core.module';
+import { SearchModule } from './search/search.module';
 import configuration from './config/configuration';
-// import { Moment } from 'moment';
-// import moment = require('moment');
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
@@ -35,7 +34,9 @@ import { join } from 'path';
     DatabaseModule,
     EquipmentModule,
     CustomerEquipmentModule,
-    CoreModule
+    CoreModule,
+    SearchModule
   ],
+  providers: [],
 })
 export class AppModule {}

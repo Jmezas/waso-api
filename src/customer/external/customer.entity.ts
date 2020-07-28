@@ -1,6 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { MinLength, MaxLength, IsEmail, IsInt, Length } from 'class-validator';
 import { Status } from '../../common/status.enum';
+import { Order } from '../../core/order/local/order.entity';
+import { CustomerEquipment } from '../../customer-equipment/local/customer-equipment.entity';
 
 @Entity('customers')
 export class Customer {
@@ -45,4 +47,19 @@ export class Customer {
   // @Column({ type: 'varchar', enum: Status, default: Status.ACTIVE, length: 25 })
   @Column({ type: 'enum', enum: Status, default: Status.ACTIVE })
   status: string;
+
+  // Relación con la DB propia
+  @OneToMany(
+    type => Order,
+    order => order.customer
+  )
+  orders: Order[];
+
+  // Relación con la DB propia
+  @OneToMany(
+    type => CustomerEquipment,
+    customer_equipment => customer_equipment.customer
+  )
+  customer_equipments: CustomerEquipment[];
+
 }

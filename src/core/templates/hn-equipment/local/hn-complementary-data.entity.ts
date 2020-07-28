@@ -14,7 +14,7 @@ export class HnComplementaryData {
     @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     cistern_height: number;
 
-    @Column({ type: 'int', nullable: true })
+    @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     cistern_width: number;
 
     @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })

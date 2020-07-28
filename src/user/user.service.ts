@@ -55,6 +55,17 @@ export class UserService {
        
     }
 
+    async getResponsibles(): Promise<User[]> {
+
+        const userResponsibles: User[] = await this.userRepository.find({
+            where: { is_responsible: true, status: Status.ACTIVE },
+            relations: ['role']
+        });
+
+        return userResponsibles;
+
+    }
+
     async get(id: string): Promise<User> {
 
         if (!id) {

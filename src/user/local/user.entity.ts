@@ -41,6 +41,9 @@ export class User {
     @Column({ type: 'varchar', length: 200, nullable: true })
     device_token: string;
 
+    @Column({ type: 'boolean', default: false })
+    is_responsible: boolean;
+
     @Column({ type: 'enum', enum: Status, default: Status.ACTIVE })
     status: string;
 

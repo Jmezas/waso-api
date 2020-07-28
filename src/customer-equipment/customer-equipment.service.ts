@@ -17,8 +17,8 @@ export class CustomerEquipmentService {
     async getCustomerEquipments( customer_id: string ): Promise<CustomerEquipment[]> {
 
         const customerEquipments = await this.customerEquipmentRepository.find({
-            where: { customer_id, status: Status.ACTIVE },
-            relations: ['equipment']
+            where: { customer: customer_id, status: Status.ACTIVE },
+            relations: ['customer', 'equipment']
         });
 
         return customerEquipments;
@@ -26,9 +26,33 @@ export class CustomerEquipmentService {
 
     async createCustomerEquipment( customerEquipment: CustomerEquipment ): Promise<CustomerEquipment> {
 
-        const customerEquipmentCreated = await this.customerEquipmentRepository.save(customerEquipment);
+        const custEquipmentDb: CustomerEquipment[] = await this.customerEquipmentRepository.find({
+            where: {
+                customer: customerEquipment.customer,
+                equipment: customerEquipment.equipment
+            },
+            relations: ['customer', 'equipment'],
+            order: { equipment_number: 'DESC' },
+            take: 1
+        });
 
-        return customerEquipmentCreated;
+        if (custEquipmentDb.length > 0 ) {
+
+            customerEquipment.equipment_number = (custEquipmentDb[0].equipment_number) + 1;
+
+            const customerEquipmentCreated = await this.customerEquipmentRepository.save(customerEquipment);
+
+            return customerEquipmentCreated;
+
+        } else {
+
+            customerEquipment.equipment_number = 1;
+
+            const customerEquipmentCreated = await this.customerEquipmentRepository.save(customerEquipment);
+
+            return customerEquipmentCreated;
+        }
+
     }
 
     async deleteCustomerEquipment( id: string ): Promise<CustomerEquipment> {

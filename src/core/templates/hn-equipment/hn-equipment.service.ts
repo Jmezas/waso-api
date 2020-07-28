@@ -2,11 +2,11 @@ import { Injectable, Inject, BadRequestException, NotFoundException } from '@nes
 import { Repository, Transaction, TransactionManager, EntityManager, Not, createQueryBuilder, getRepository } from 'typeorm';
 import { Status } from '../../../common/status.enum';
 
+// Entities
 import { HnEquipment } from './local/hn-equipment.entity';
 import { HnComplementaryData } from './local/hn-complementary-data.entity';
 import { HnTechnicalReport } from './local/hn-technical-report.entity';
 import { CustomerEquipment } from '../../../customer-equipment/local/customer-equipment.entity';
-import { Order } from '../../order/local/order.entity';
 
 // DTO's
 import { HnEquipmentDTO } from './dtos/hn-equipment.dto';
@@ -25,9 +25,7 @@ export class HnEquipmentService {
         @Inject('HN_TECHNICAL_REPORT_REPOSITORY')
         private hntrRepository: Repository<HnTechnicalReport>,
         @Inject('CUSTOMER_EQUIPMENT_REPOSITORY')
-        private custEquipmentRepository: Repository<CustomerEquipment>,
-        @Inject('ORDER_REPOSITORY')
-        private orderRepository: Repository<HnTechnicalReport>
+        private custEquipmentRepository: Repository<CustomerEquipment>
     ) { }
 
     async get(order_id: string): Promise<HnEquipment[]> {
@@ -49,9 +47,9 @@ export class HnEquipmentService {
             .innerJoinAndSelect('hne.hn_complementary_data', 'hncd')
             .innerJoinAndSelect('hne.order', 'order')
             .innerJoinAndSelect('hne.equipment', 'equipment')
-            .where('order.customer_id = :customer_id', { customer_id })
+            .where('order.customer = :customer_id', { customer_id })
             .andWhere('hne.equipment = :equipment_id',  { equipment_id })
-            .orderBy('hne.created_at', 'DESC')
+            .orderBy('order.execution_date', 'DESC')
             .getOne();
 
         return hnEquipment;
@@ -76,11 +74,33 @@ export class HnEquipmentService {
         // Buscar el tipo de orden y crea en la tabla customer_equipments en caso sea un servicio de instalación
         if (hneDTO.hn_equipment.order.order_type.description === 'Instalación') {
 
-            const customerEquipmentCreated = await this.custEquipmentRepository.save({
-                customer_id: hneDTO.hn_equipment.order.customer_id,
-                equipment: hneDTO.hn_equipment.equipment
+            const custEquipmentDb: CustomerEquipment[] = await this.custEquipmentRepository.find({
+                where: {
+                    customer: hneDTO.hn_equipment.order.customer,
+                    equipment: hneDTO.hn_equipment.equipment
+                },
+                order: { equipment_number: 'DESC' },
+                take: 1
             });
 
+            if ( custEquipmentDb.length > 0 ) {
+
+                const customerEquipmentCreated = await this.custEquipmentRepository.save({
+                    customer: hneDTO.hn_equipment.order.customer,
+                    equipment: hneDTO.hn_equipment.equipment,
+                    equipment_number: (custEquipmentDb[0].equipment_number) + 1
+                });
+
+            } else {
+
+                const customerEquipmentCreated = await this.custEquipmentRepository.save({
+                    customer: hneDTO.hn_equipment.order.customer,
+                    equipment: hneDTO.hn_equipment.equipment,
+                    equipment_number: 1
+                });
+
+            }
+            
         }
 
         return {
@@ -153,7 +173,7 @@ export class HnEquipmentService {
             // TODO: obtener la orden que originó la instalación de este equipo al cliente
             const customerEquipment = await this.custEquipmentRepository.find({
                 where: {
-                    customer_id: hnEquipmentDb.order.customer_id,
+                    customer_id: hnEquipmentDb.order.customer.id,
                     equipment: hnEquipmentDb.equipment
                 }
             });

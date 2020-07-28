@@ -35,8 +35,8 @@ export class OrderService {
 
             const [orders, totalRecords] = await this.orderRepository.findAndCount({
                 where: { status: Status.ACTIVE },
-                relations: ['technical', 'user', 'responsable_user', 'order_type', 'service_type'],
-                order: { created_at: 'DESC' },
+                relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type'],
+                order: { execution_date: 'ASC' },
                 skip,
                 take: 10
             });
@@ -48,8 +48,8 @@ export class OrderService {
             if (all === 'true') {
 
                 const [orders, totalRecords] = await this.orderRepository.findAndCount({
-                    relations: ['technical', 'user', 'responsable_user', 'order_type', 'service_type'],
-                    order: { created_at: 'DESC' },
+                    relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type'],
+                    order: { execution_date: 'ASC' },
                     skip,
                     take: 10
                 });
@@ -60,8 +60,8 @@ export class OrderService {
 
                 const [orders, totalRecords] = await this.orderRepository.findAndCount({
                     where: { status: Status.ACTIVE },
-                    relations: ['technical', 'user', 'responsable_user', 'order_type', 'service_type'],
-                    order: { created_at: 'DESC' },
+                    relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type'],
+                    order: { execution_date: 'ASC' },
                     skip,
                     take: 10
                 });
@@ -78,7 +78,7 @@ export class OrderService {
 
         const order: Order = await this.orderRepository.findOne(id, {
             where: { status: Status.ACTIVE },
-            relations: ['technical', 'user', 'responsable_user', 'order_type', 'service_type']
+            relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type']
         });
 
         return order;
@@ -86,11 +86,31 @@ export class OrderService {
 
     async create(order: Order): Promise<Order> {
 
-        if (!order.responsable_user) {
-            order.responsable_user = order.user;
+        // Instanciar el primer número de orden
+        order.order_number = 1
+
+        if (!order.responsible_user) {
+            order.responsible_user = order.user;
+        }
+
+        const orderDb: Order[] = await this.orderRepository.find({
+            take: 1
+        });
+
+        if (orderDb.length > 0) {
+
+            const orderMaxDb: Order[] = await this.orderRepository.find({
+                order: { order_number: 'DESC' },
+                take: 1
+            });
+
+            order.order_number = (orderMaxDb[0].order_number) + 1;
+
         }
 
         const orderCreated = await this.orderRepository.save(order);
+
+        console.log(orderDb, order);
 
         return orderCreated;
     }

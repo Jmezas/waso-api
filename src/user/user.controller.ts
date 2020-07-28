@@ -40,6 +40,17 @@ export class UserController {
     });
   }
 
+  @Get('/responsibles')
+  async getResponsibles( @Res() res ) {
+
+    const userResponsibles = await this._userService.getResponsibles();
+
+    res.status(HttpStatus.OK).json({
+      userResponsibles
+    });
+    
+  }
+
   @Get('/:id')
   // @Roles('ADMIN', 'SUPERVISOR') // Ojo a este cambio por roles
   // @UseGuards(AuthGuard('jwt'), RolesGuard) // Ojo a este por la autorización con roles
