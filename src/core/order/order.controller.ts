@@ -16,9 +16,14 @@ export class OrderController {
     ) { }
 
     @Get()
-    async getOrders( @Res() res, @Query('skip') skip: number, @Query('all') all: string ) {
+    async getOrders( 
+        @Res() res, 
+        @Query('skip') skip: number, 
+        @Query('all') all: string, 
+        @Query('order_by') order_by: string
+    ) {
 
-        const [orders, totalRecords] = await this._orderService.getAll(skip, all);
+        const [orders, totalRecords] = await this._orderService.getAll(skip, all, order_by);
 
         res.status(HttpStatus.OK).json({
             orders,

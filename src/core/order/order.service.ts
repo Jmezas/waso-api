@@ -29,48 +29,50 @@ export class OrderService {
         private hntrRepository: Repository<HnTechnicalReport>
     ) { }
 
-    async getAll( skip: number, all: string ): Promise<[Order[], Number]> {
+    async getAll( skip: number, all: string, order_by: string ): Promise<[Order[], Number]> {
 
-        if (!all) {
+        const status = Status.INACTIVE;
 
-            const [orders, totalRecords] = await this.orderRepository.findAndCount({
-                where: { status: Status.ACTIVE },
-                relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type'],
-                order: { execution_date: 'ASC' },
-                skip,
-                take: 10
-            });
+        if (!order_by) {
+            order_by = 'order.execution_date';
+        }
+
+        if (!all || all !== 'true') {
+
+            const [orders, totalRecords] = await this.orderRepository
+                .createQueryBuilder('order')
+                .innerJoinAndSelect('order.customer', 'customer')
+                .innerJoinAndSelect('order.technical', 'technical')
+                .innerJoinAndSelect('order.user', 'user')
+                .innerJoinAndSelect('order.responsible_user', 'ruser')
+                .innerJoinAndSelect('order.order_type', 'otype')
+                .innerJoinAndSelect('order.service_type', 'stype')
+                .where('order.status <> :status', { status })
+                .orderBy(order_by, 'DESC')
+                .skip(skip)
+                .take(10)
+                .getManyAndCount();
 
             return [orders, totalRecords];
 
         } else {
 
-            if (all === 'true') {
+            const [orders, totalRecords] = await this.orderRepository
+                .createQueryBuilder('order')
+                .innerJoinAndSelect('order.customer', 'customer')
+                .innerJoinAndSelect('order.technical', 'technical')
+                .innerJoinAndSelect('order.user', 'user')
+                .innerJoinAndSelect('order.responsible_user', 'ruser')
+                .innerJoinAndSelect('order.order_type', 'otype')
+                .innerJoinAndSelect('order.service_type', 'stype')
+                .orderBy(order_by, 'DESC')
+                .skip(skip)
+                .take(10)
+                .getManyAndCount();
 
-                const [orders, totalRecords] = await this.orderRepository.findAndCount({
-                    relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type'],
-                    order: { execution_date: 'ASC' },
-                    skip,
-                    take: 10
-                });
+            return [orders, totalRecords];
 
-                return [orders, totalRecords];
-
-            } else {
-
-                const [orders, totalRecords] = await this.orderRepository.findAndCount({
-                    where: { status: Status.ACTIVE },
-                    relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type'],
-                    order: { execution_date: 'ASC' },
-                    skip,
-                    take: 10
-                });
-
-                return [orders, totalRecords];
-                
-            }
         }
-        
 
     }
 

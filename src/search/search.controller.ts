@@ -17,7 +17,8 @@ export class SearchController {
         @Param('collection') collection: string, 
         @Param('term') term: string, 
         @Query('skip') skip: number,
-        @Query('all') all: string
+        @Query('all') all: string,
+        @Query('order_by') order_by: string
     ) {
 
         if (!term) {
@@ -27,12 +28,14 @@ export class SearchController {
             });
         }
 
-        let promise: any;
-
         switch( collection ) {
 
             case 'orders':
-                promise = this._searchService.getOrders( term, skip, all );
+                const [orders, totalRecords] = await this._searchService.getOrders( term, skip, all, order_by );
+                res.status(HttpStatus.OK).json({
+                    orders,
+                    totalRecords
+                });
             break;
 
             default:
@@ -41,12 +44,6 @@ export class SearchController {
                     message: 'The search collection is invalid'
                 });
         }
-
-        promise.then( (data: any) => {
-            res.status(HttpStatus.OK).json({
-                [collection]: data 
-            });
-        });
 
     }
 }

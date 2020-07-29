@@ -16,14 +16,18 @@ export class SearchService {
         private orderRepository: Repository<Order>
     ) { }
 
-    async getOrders(term: string, skip: number, all: string ): Promise<Order[]> {
+    async getOrders(term: string, skip: number, all: string, order_by: string ): Promise<[Order[], Number]> {
 
         const searchTerm: string = '%' + term + '%';
         const status = Status.INACTIVE;
 
-        if (!all) {
+        if (!order_by) {
+            order_by = 'order.execution_date';
+        }
+
+        if (!all || all !== 'true') {
             
-            const orders: Order[] = await this.orderRepository
+            const [orders, totalRecords] = await this.orderRepository
                 .createQueryBuilder('order')
                 .innerJoinAndSelect('order.customer', 'customer')
                 .innerJoinAndSelect('order.technical', 'technical')
@@ -40,16 +44,16 @@ export class SearchService {
                     .orWhere('technical.first_name like :searchTerm', { searchTerm })
                     .orWhere('technical.last_name like :searchTerm', { searchTerm })
                 }))
-                .orderBy('order.created_at', 'DESC')
+                .orderBy(order_by, 'DESC')
                 .skip(skip)
                 .take(10)
-                .getMany();
+                .getManyAndCount();
     
-            return orders;
+            return [orders, totalRecords];
 
         } else {
 
-            const orders: Order[] = await this.orderRepository
+            const [orders, totalRecords] = await this.orderRepository
                 .createQueryBuilder('order')
                 .innerJoinAndSelect('order.customer', 'customer')
                 .innerJoinAndSelect('order.technical', 'technical')
@@ -63,12 +67,12 @@ export class SearchService {
                 .orWhere('customer.nit = :term', { term })
                 .orWhere('technical.first_name like :searchTerm', { searchTerm })
                 .orWhere('technical.last_name like :searchTerm', { searchTerm })
-                .orderBy('order.created_at', 'DESC')
+                .orderBy(order_by, 'DESC')
                 .skip(skip)
                 .take(10)
-                .getMany();
+                .getManyAndCount();
 
-            return orders;
+            return [orders, totalRecords];
 
         }
 
