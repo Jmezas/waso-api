@@ -20,10 +20,11 @@ export class OrderController {
         @Res() res, 
         @Query('skip') skip: number, 
         @Query('all') all: string, 
-        @Query('order_by') order_by: string
+        @Query('order_by') order_by: string,
+        @Query('order_term') order_term: string
     ) {
 
-        const [orders, totalRecords] = await this._orderService.getAll(skip, all, order_by);
+        const [orders, totalRecords] = await this._orderService.getAll(skip, all, order_by, order_term);
 
         res.status(HttpStatus.OK).json({
             orders,

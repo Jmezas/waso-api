@@ -16,7 +16,7 @@ export class SearchService {
         private orderRepository: Repository<Order>
     ) { }
 
-    async getOrders(term: string, skip: number, all: string, order_by: string ): Promise<[Order[], Number]> {
+    async getOrders(term: string, skip: number, all: string, order_by: string, order_term: string ): Promise<[Order[], Number]> {
 
         const searchTerm: string = '%' + term + '%';
         const status = Status.INACTIVE;
@@ -25,55 +25,111 @@ export class SearchService {
             order_by = 'order.execution_date';
         }
 
+        if (!order_term) {
+            order_term = 'DESC';
+        }
+
         if (!all || all !== 'true') {
-            
-            const [orders, totalRecords] = await this.orderRepository
-                .createQueryBuilder('order')
-                .innerJoinAndSelect('order.customer', 'customer')
-                .innerJoinAndSelect('order.technical', 'technical')
-                .innerJoinAndSelect('order.user', 'user')
-                .innerJoinAndSelect('order.responsible_user', 'ruser')
-                .innerJoinAndSelect('order.order_type', 'otype')
-                .innerJoinAndSelect('order.service_type', 'stype')
-                .where('order.status <> :status', { status })
-                .andWhere(new Brackets(qb => {
-                    qb.where('order.order_number = :term', { term })
+
+            if (order_term === 'DESC') {
+                const [orders, totalRecords] = await this.orderRepository
+                    .createQueryBuilder('order')
+                    .innerJoinAndSelect('order.customer', 'customer')
+                    .innerJoinAndSelect('order.technical', 'technical')
+                    .innerJoinAndSelect('order.user', 'user')
+                    .innerJoinAndSelect('order.responsible_user', 'ruser')
+                    .innerJoinAndSelect('order.order_type', 'otype')
+                    .innerJoinAndSelect('order.service_type', 'stype')
+                    .where('order.status <> :status', { status })
+                    .andWhere(new Brackets(qb => {
+                        qb.where('order.order_number = :term', { term })
+                        // .orWhere('order.execution_date like :searchTerm', { searchTerm })
+                        .orWhere('customer.first_name like :searchTerm', { searchTerm })
+                        .orWhere('customer.last_name like :searchTerm', { searchTerm })
+                        .orWhere('customer.nit = :term', { term })
+                        .orWhere('technical.first_name like :searchTerm', { searchTerm })
+                        .orWhere('technical.last_name like :searchTerm', { searchTerm })
+                    }))
+                    .orderBy(order_by, 'DESC')
+                    .skip(skip)
+                    .take(10)
+                    .getManyAndCount();
+        
+                return [orders, totalRecords];
+
+            } else {
+                const [orders, totalRecords] = await this.orderRepository
+                    .createQueryBuilder('order')
+                    .innerJoinAndSelect('order.customer', 'customer')
+                    .innerJoinAndSelect('order.technical', 'technical')
+                    .innerJoinAndSelect('order.user', 'user')
+                    .innerJoinAndSelect('order.responsible_user', 'ruser')
+                    .innerJoinAndSelect('order.order_type', 'otype')
+                    .innerJoinAndSelect('order.service_type', 'stype')
+                    .where('order.status <> :status', { status })
+                    .andWhere(new Brackets(qb => {
+                        qb.where('order.order_number = :term', { term })
+                            // .orWhere('order.execution_date like :searchTerm', { searchTerm })
+                            .orWhere('customer.first_name like :searchTerm', { searchTerm })
+                            .orWhere('customer.last_name like :searchTerm', { searchTerm })
+                            .orWhere('customer.nit = :term', { term })
+                            .orWhere('technical.first_name like :searchTerm', { searchTerm })
+                            .orWhere('technical.last_name like :searchTerm', { searchTerm })
+                    }))
+                    .orderBy(order_by, 'ASC')
+                    .skip(skip)
+                    .take(10)
+                    .getManyAndCount();
+
+                return [orders, totalRecords];
+            }
+
+        } else {
+
+            if (order_term === 'DESC') {
+                const [orders, totalRecords] = await this.orderRepository
+                    .createQueryBuilder('order')
+                    .innerJoinAndSelect('order.customer', 'customer')
+                    .innerJoinAndSelect('order.technical', 'technical')
+                    .innerJoinAndSelect('order.user', 'user')
+                    .innerJoinAndSelect('order.responsible_user', 'ruser')
+                    .innerJoinAndSelect('order.order_type', 'otype')
+                    .innerJoinAndSelect('order.service_type', 'stype')
+                    .where('order.order_number = :term', { term })
                     .orWhere('customer.first_name like :searchTerm', { searchTerm })
                     .orWhere('customer.last_name like :searchTerm', { searchTerm })
                     .orWhere('customer.nit = :term', { term })
                     .orWhere('technical.first_name like :searchTerm', { searchTerm })
                     .orWhere('technical.last_name like :searchTerm', { searchTerm })
-                }))
-                .orderBy(order_by, 'DESC')
-                .skip(skip)
-                .take(10)
-                .getManyAndCount();
+                    .orderBy(order_by, 'DESC')
+                    .skip(skip)
+                    .take(10)
+                    .getManyAndCount();
     
-            return [orders, totalRecords];
+                return [orders, totalRecords];
+                
+            } else {
+                const [orders, totalRecords] = await this.orderRepository
+                    .createQueryBuilder('order')
+                    .innerJoinAndSelect('order.customer', 'customer')
+                    .innerJoinAndSelect('order.technical', 'technical')
+                    .innerJoinAndSelect('order.user', 'user')
+                    .innerJoinAndSelect('order.responsible_user', 'ruser')
+                    .innerJoinAndSelect('order.order_type', 'otype')
+                    .innerJoinAndSelect('order.service_type', 'stype')
+                    .where('order.order_number = :term', { term })
+                    .orWhere('customer.first_name like :searchTerm', { searchTerm })
+                    .orWhere('customer.last_name like :searchTerm', { searchTerm })
+                    .orWhere('customer.nit = :term', { term })
+                    .orWhere('technical.first_name like :searchTerm', { searchTerm })
+                    .orWhere('technical.last_name like :searchTerm', { searchTerm })
+                    .orderBy(order_by, 'ASC')
+                    .skip(skip)
+                    .take(10)
+                    .getManyAndCount();
 
-        } else {
-
-            const [orders, totalRecords] = await this.orderRepository
-                .createQueryBuilder('order')
-                .innerJoinAndSelect('order.customer', 'customer')
-                .innerJoinAndSelect('order.technical', 'technical')
-                .innerJoinAndSelect('order.user', 'user')
-                .innerJoinAndSelect('order.responsible_user', 'ruser')
-                .innerJoinAndSelect('order.order_type', 'otype')
-                .innerJoinAndSelect('order.service_type', 'stype')
-                .where('order.order_number = :term', { term })
-                .orWhere('customer.first_name like :searchTerm', { searchTerm })
-                .orWhere('customer.last_name like :searchTerm', { searchTerm })
-                .orWhere('customer.nit = :term', { term })
-                .orWhere('technical.first_name like :searchTerm', { searchTerm })
-                .orWhere('technical.last_name like :searchTerm', { searchTerm })
-                .orderBy(order_by, 'DESC')
-                .skip(skip)
-                .take(10)
-                .getManyAndCount();
-
-            return [orders, totalRecords];
-
+                return [orders, totalRecords];
+            }
         }
 
     }

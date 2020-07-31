@@ -29,7 +29,7 @@ export class OrderService {
         private hntrRepository: Repository<HnTechnicalReport>
     ) { }
 
-    async getAll( skip: number, all: string, order_by: string ): Promise<[Order[], Number]> {
+    async getAll( skip: number, all: string, order_by: string, order_term: string ): Promise<[Order[], Number]> {
 
         const status = Status.INACTIVE;
 
@@ -37,40 +37,79 @@ export class OrderService {
             order_by = 'order.execution_date';
         }
 
+        if (!order_term) {
+            order_term = 'DESC';
+        }
+
         if (!all || all !== 'true') {
 
-            const [orders, totalRecords] = await this.orderRepository
-                .createQueryBuilder('order')
-                .innerJoinAndSelect('order.customer', 'customer')
-                .innerJoinAndSelect('order.technical', 'technical')
-                .innerJoinAndSelect('order.user', 'user')
-                .innerJoinAndSelect('order.responsible_user', 'ruser')
-                .innerJoinAndSelect('order.order_type', 'otype')
-                .innerJoinAndSelect('order.service_type', 'stype')
-                .where('order.status <> :status', { status })
-                .orderBy(order_by, 'DESC')
-                .skip(skip)
-                .take(10)
-                .getManyAndCount();
+            if (order_term === 'DESC') {
+                const [orders, totalRecords] = await this.orderRepository
+                    .createQueryBuilder('order')
+                    .innerJoinAndSelect('order.customer', 'customer')
+                    .innerJoinAndSelect('order.technical', 'technical')
+                    .innerJoinAndSelect('order.user', 'user')
+                    .innerJoinAndSelect('order.responsible_user', 'ruser')
+                    .innerJoinAndSelect('order.order_type', 'otype')
+                    .innerJoinAndSelect('order.service_type', 'stype')
+                    .where('order.status <> :status', { status })
+                    .orderBy(order_by, 'DESC')
+                    .skip(skip)
+                    .take(10)
+                    .getManyAndCount();
+    
+                return [orders, totalRecords];
+            } else {
+                const [orders, totalRecords] = await this.orderRepository
+                    .createQueryBuilder('order')
+                    .innerJoinAndSelect('order.customer', 'customer')
+                    .innerJoinAndSelect('order.technical', 'technical')
+                    .innerJoinAndSelect('order.user', 'user')
+                    .innerJoinAndSelect('order.responsible_user', 'ruser')
+                    .innerJoinAndSelect('order.order_type', 'otype')
+                    .innerJoinAndSelect('order.service_type', 'stype')
+                    .where('order.status <> :status', { status })
+                    .orderBy(order_by, 'ASC')
+                    .skip(skip)
+                    .take(10)
+                    .getManyAndCount();
 
-            return [orders, totalRecords];
+                return [orders, totalRecords];
+            }
 
         } else {
 
-            const [orders, totalRecords] = await this.orderRepository
-                .createQueryBuilder('order')
-                .innerJoinAndSelect('order.customer', 'customer')
-                .innerJoinAndSelect('order.technical', 'technical')
-                .innerJoinAndSelect('order.user', 'user')
-                .innerJoinAndSelect('order.responsible_user', 'ruser')
-                .innerJoinAndSelect('order.order_type', 'otype')
-                .innerJoinAndSelect('order.service_type', 'stype')
-                .orderBy(order_by, 'DESC')
-                .skip(skip)
-                .take(10)
-                .getManyAndCount();
+            if (order_term === 'DESC') {
+                const [orders, totalRecords] = await this.orderRepository
+                    .createQueryBuilder('order')
+                    .innerJoinAndSelect('order.customer', 'customer')
+                    .innerJoinAndSelect('order.technical', 'technical')
+                    .innerJoinAndSelect('order.user', 'user')
+                    .innerJoinAndSelect('order.responsible_user', 'ruser')
+                    .innerJoinAndSelect('order.order_type', 'otype')
+                    .innerJoinAndSelect('order.service_type', 'stype')
+                    .orderBy(order_by, 'DESC')
+                    .skip(skip)
+                    .take(10)
+                    .getManyAndCount();
+    
+                return [orders, totalRecords];
+            } else {
+                const [orders, totalRecords] = await this.orderRepository
+                    .createQueryBuilder('order')
+                    .innerJoinAndSelect('order.customer', 'customer')
+                    .innerJoinAndSelect('order.technical', 'technical')
+                    .innerJoinAndSelect('order.user', 'user')
+                    .innerJoinAndSelect('order.responsible_user', 'ruser')
+                    .innerJoinAndSelect('order.order_type', 'otype')
+                    .innerJoinAndSelect('order.service_type', 'stype')
+                    .orderBy(order_by, 'ASC')
+                    .skip(skip)
+                    .take(10)
+                    .getManyAndCount();
 
-            return [orders, totalRecords];
+                return [orders, totalRecords];
+            }
 
         }
 

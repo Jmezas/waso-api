@@ -18,7 +18,8 @@ export class SearchController {
         @Param('term') term: string, 
         @Query('skip') skip: number,
         @Query('all') all: string,
-        @Query('order_by') order_by: string
+        @Query('order_by') order_by: string,
+        @Query('order_term') order_term: string
     ) {
 
         if (!term) {
@@ -31,7 +32,7 @@ export class SearchController {
         switch( collection ) {
 
             case 'orders':
-                const [orders, totalRecords] = await this._searchService.getOrders( term, skip, all, order_by );
+                const [orders, totalRecords] = await this._searchService.getOrders( term, skip, all, order_by, order_term );
                 res.status(HttpStatus.OK).json({
                     orders,
                     totalRecords
