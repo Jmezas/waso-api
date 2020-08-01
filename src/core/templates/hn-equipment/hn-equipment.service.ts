@@ -151,7 +151,7 @@ export class HnEquipmentService {
 
         const hnEquipmentDb = await this.hneRespository.findOne(id, {
             where: { status: Status.ACTIVE },
-            relations: ['order', 'order.order_type', 'equipment', 'hn_technical_report', 'hn_complementary_data']
+            relations: ['order', 'order.order_type', 'order.customer', 'equipment', 'hn_technical_report', 'hn_complementary_data']
         });
 
         if (!hnEquipmentDb) {
@@ -171,12 +171,16 @@ export class HnEquipmentService {
             // TODO: obtener la orden que originó la instalación de este equipo al cliente
             const customerEquipment = await this.custEquipmentRepository.find({
                 where: {
-                    customer_id: hnEquipmentDb.order.customer.id,
-                    equipment: hnEquipmentDb.equipment
+                    customer: hnEquipmentDb.order.customer,
+                    equipment: hnEquipmentDb.equipment,
+                    status: Status.ACTIVE
                 }
             });
 
-            const customerEquipmentDeleted = await this.custEquipmentRepository.delete(customerEquipment[0].id);
+            if (customerEquipment) {
+                const customerEquipmentDeleted = await this.custEquipmentRepository.delete(customerEquipment[0].id);
+            }
+
         }
 
         return hnEquipmentDb;
