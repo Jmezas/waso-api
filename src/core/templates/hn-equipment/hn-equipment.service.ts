@@ -60,8 +60,6 @@ export class HnEquipmentService {
     @Transaction() // TODO: desarrollar la transaccionalidad de las operaciones
     async create( hneDTO: HnEquipmentDTO, @TransactionManager() manager?: EntityManager ) {
 
-        console.log(hneDTO);
-
         // let hneCreated = await manager.save(hneDTO.hn_equipment);
         let hneCreated = await this.hneRespository.save(hneDTO.hn_equipment);
 
