@@ -2,6 +2,7 @@
 export enum Status {
 
     ACTIVE = 'ACTIVE',
-    INACTIVE = 'INACTIVE'
-    
+    INACTIVE = 'INACTIVE',
+    CONFIRMED = 'CONFIRMED',
+    CANCELLED = 'CANCELLED'
 }

@@ -32,6 +32,16 @@ export class OrderController {
         });
     }
 
+    @Get('/status/:status')
+    async getOrdersByStatus( @Res() res, @Param('status') status: string ) {
+
+        const orders = await this._orderService.getAllByStatus(status);
+
+        res.status(HttpStatus.OK).json({
+            orders
+        });
+    }
+
     @Get('/:id')
     async getOrder( @Res() res, @Param('id') id: string ) {
 

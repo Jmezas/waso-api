@@ -115,6 +115,28 @@ export class OrderService {
 
     }
 
+    async getAllByStatus( status: string ): Promise<Order[]> {
+
+        let orders: Order[] = [];
+
+        if (status === 'ACTIVE') {
+            orders = await this.orderRepository.find({
+                where: { status: Status.ACTIVE },
+                order: { execution_date: 'ASC' },
+                relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type']
+            });
+        } else {
+            orders = await this.orderRepository.find({
+                where: { status: In([Status.CONFIRMED, Status.CANCELLED]) },
+                order: { execution_date: 'ASC' },
+                relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type']
+            });
+        }
+
+        return orders;
+
+    }
+
     async get(id: string): Promise<Order> {
 
         const order: Order = await this.orderRepository.findOne(id, {
