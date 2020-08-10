@@ -127,7 +127,7 @@ export class OrderService {
             });
         } else {
             orders = await this.orderRepository.find({
-                where: { status: In([Status.CONFIRMED, Status.CANCELLED]) },
+                where: { status: In([Status.CLOSED, Status.CONFIRMED, Status.CANCELLED]) },
                 order: { execution_date: 'ASC' },
                 relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type']
             });
@@ -184,7 +184,7 @@ export class OrderService {
         }
 
         const orderDb: Order = await this.orderRepository.findOne(id, {
-            where: { status: Status.ACTIVE },
+            where: { status: In([Status.ACTIVE, Status.CLOSED, Status.CONFIRMED, Status.CANCELLED]) },
         });
 
         if (!orderDb) {
@@ -205,7 +205,7 @@ export class OrderService {
         }
 
         const orderDb: Order = await this.orderRepository.findOne(id, {
-            where: { status: Status.ACTIVE },
+            where: { status: In([Status.ACTIVE, Status.CLOSED, Status.CONFIRMED, Status.CANCELLED]) },
         });
 
         if (!orderDb) {

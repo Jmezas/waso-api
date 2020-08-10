@@ -31,7 +31,7 @@ export class HnEquipmentService {
     async get(order_id: string): Promise<HnEquipment[]> {
 
         const hnEquipment: HnEquipment[] = await this.hneRespository.find({
-            where: { order: order_id, status: Status.ACTIVE },
+            where: { order: order_id },
             relations: ['order', 'order.order_type', 'equipment', 'hn_technical_report', 'hn_complementary_data']
         });
 
