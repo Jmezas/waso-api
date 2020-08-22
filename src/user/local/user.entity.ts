@@ -5,6 +5,8 @@ import { Status } from '../../common/status.enum';
 // Model-Relations
 import { Role } from '../../role/local/role.entity';
 import { Order } from '../../core/order/local/order.entity';
+import { Customer } from '../../customer/external/customer.entity';
+import { Technical } from '../../technical/local/technical.entity';
 
 @Entity('users')
 export class User {
@@ -68,5 +70,17 @@ export class User {
         order => order.user
     )
     orders: Order[];
+
+    @OneToMany(
+        type => Customer,
+        customer => customer.user
+    )
+    customers: Customer[];
+
+    @OneToMany(
+        type => Technical,
+        technical => technical.user
+    )
+    technicians: Technical[];
 
 }

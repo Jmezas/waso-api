@@ -21,6 +21,7 @@ export class TechnicalService {
 
             const [technicians, totalRecords] = await this.technicalRepository.findAndCount({
                 where: { status: Status.ACTIVE },
+                relations: ['user'],
                 skip,
                 take: 10
             });
@@ -32,6 +33,7 @@ export class TechnicalService {
             if (all === 'true') {
 
                 const [technicians, totalRecords] = await this.technicalRepository.findAndCount({
+                    relations: ['user'],
                     skip,
                     take: 10
                 });
@@ -42,6 +44,7 @@ export class TechnicalService {
 
                 const [technicians, totalRecords] = await this.technicalRepository.findAndCount({
                     where: { status: Status.ACTIVE },
+                    relations: ['user'],
                     skip,
                     take: 10
                 });
@@ -58,7 +61,8 @@ export class TechnicalService {
     async get(id: string): Promise<Technical> {
 
         const technical: Technical = await this.technicalRepository.findOne(id, {
-            where: { status: Status.ACTIVE }
+            where: { status: Status.ACTIVE },
+            relations: ['user'],
         });
 
         return technical;

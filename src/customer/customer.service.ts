@@ -16,6 +16,7 @@ export class CustomerService {
 
     const [customers, totalRecords] = await this.customerRepository.findAndCount({
       where: { status: Status.ACTIVE },
+      relations: ['user'],
       skip,
       take: 10
     });
@@ -29,7 +30,10 @@ export class CustomerService {
       throw new BadRequestException('The resource ID was not sent')
     }
 
-    const customer: Customer = await this.customerRepository.findOne(id);
+    const customer: Customer = await this.customerRepository.findOne(id, {
+      where: { status: Status.ACTIVE },
+      relations: ['user'],
+    });
 
     if (!customer) {
       throw new NotFoundException('The requested resource was not found')
@@ -41,11 +45,33 @@ export class CustomerService {
   async getCustomerSelect(): Promise<CustomerSelectDTO[]> {
 
     const customers: Customer[] = await this.customerRepository.find({
-      where: { status: Status.ACTIVE }
+      where: { status: Status.ACTIVE },
+      relations: ['user'],
     });
 
     return customers.map((customer: Customer) => plainToClass(CustomerSelectDTO, customer));
 
+  }
+
+  async update(id: string, customer: Customer): Promise<Customer> {
+
+    if (!id) {
+        throw new BadRequestException('The resource ID was not sent')
+    }
+
+    const customerDb: Customer = await this.customerRepository.findOne(id, {
+        where: { status: Status.ACTIVE }
+    });
+
+    if (!customerDb) {
+        throw new NotFoundException('The requested resource was not found')
+    }
+
+    await this.customerRepository.update(id, customer);
+
+    const customerUpdated = await this.customerRepository.findOne(id);
+
+    return customerUpdated;
   }
 
 }

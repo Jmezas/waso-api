@@ -1,10 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { MinLength, MaxLength, IsInt, Length, IsEmail } from 'class-validator';
 import { Status } from '../../common/status.enum';
 import { Expose } from 'class-transformer';
 
 // Model-Relations
 import { Order } from '../../core/order/local/order.entity';
+import { User } from '../../user/local/user.entity';
 
 @Entity('technicians')
 export class Technical {
@@ -61,6 +62,16 @@ export class Technical {
 
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
+
+    @ManyToOne(
+        type => User,
+        user => user.technicians,
+        {
+            nullable: true
+        }
+    )
+    @JoinColumn({ name: 'user_id' })
+    user: User;
 
     @OneToMany(
         type => Order,

@@ -1,7 +1,8 @@
-import { Controller, Get, Param, Res, HttpStatus, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Res, HttpStatus, Query, UseGuards, Put, Body } from '@nestjs/common';
 
 // Services
 import { CustomerService } from './customer.service';
+import { Customer } from './external/customer.entity';
 
 // Guards
 import { AuthGuard } from '@nestjs/passport';
@@ -41,4 +42,16 @@ export class CustomerController {
       customer,
     });
   }
+
+  @Put('/:id')
+  async updateTechnical(@Res() res, @Param('id') id: string, @Body() customer: Customer) {
+
+    const customerUpdated = await this._customerService.update(id, customer);
+
+    res.status(HttpStatus.OK).json({
+      message: 'Customer successfully updated',
+      customerUpdated
+    });
+  }
+
 }
