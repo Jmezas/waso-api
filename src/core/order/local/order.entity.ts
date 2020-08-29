@@ -8,6 +8,7 @@ import { User } from '../../../user/local/user.entity';
 import { OrderType } from '../../order-type/local/order-type.entity';
 import { ServiceType } from '../../service-type/local/service-type.entity';
 import { HnEquipment } from '../../templates/hn-equipment/local/hn-equipment.entity';
+import { MpEquipment } from '../../templates/mp-equipment/local/mp-equipment.entity';
 
 @Entity('orders')
 export class Order {
@@ -122,5 +123,11 @@ export class Order {
         hn_equipment => hn_equipment.order
     )
     hn_equipment: HnEquipment;
+
+    @OneToOne(
+        type => MpEquipment,
+        mp_equipment => mp_equipment.order
+    )
+    mp_equipment: MpEquipment;
 
 }

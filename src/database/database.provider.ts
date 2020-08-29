@@ -1,34 +1,34 @@
 import { createConnection } from 'typeorm';
 
 export const databaseProviders = [
-         {
-           provide: 'A_LOCAL_CONNECTION',
-           useFactory: async () =>
-             await createConnection({
-               type: 'mysql',
-               host: '127.0.0.1',
-               port: 3306,
-               username: 'waso_user',
-               password: 'WasoUser1.$$',
-               database: 'waso_db',
-               entities: [__dirname + '/../**/**/*.entity{.ts,.js}'],
-               synchronize: true,
-             }),
-         },
         //  {
         //    provide: 'A_LOCAL_CONNECTION',
         //    useFactory: async () =>
         //      await createConnection({
         //        type: 'mysql',
-        //        host: 'localhost',
+        //        host: '127.0.0.1',
         //        port: 3306,
-        //        username: 'root',
-        //        password: '',
+        //        username: 'waso_user',
+        //        password: 'WasoUser1.$$',
         //        database: 'waso_db',
         //        entities: [__dirname + '/../**/**/*.entity{.ts,.js}'],
         //        synchronize: true,
         //      }),
         //  },
+         {
+           provide: 'A_LOCAL_CONNECTION',
+           useFactory: async () =>
+             await createConnection({
+               type: 'mysql',
+               host: 'localhost',
+               port: 3306,
+               username: 'root',
+               password: '',
+               database: 'waso_db',
+               entities: [__dirname + '/../**/**/*.entity{.ts,.js}'],
+               synchronize: true,
+             }),
+         },
         //  {
         //    provide: 'EXTERNAL_CONNECTION',
         //    useFactory: async () =>

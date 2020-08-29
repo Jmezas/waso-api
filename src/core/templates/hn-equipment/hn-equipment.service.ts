@@ -19,7 +19,7 @@ export class HnEquipmentService {
      */
     constructor(
         @Inject('HN_EQUIPMENT_REPOSITORY')
-        private hneRespository: Repository<HnEquipment>,
+        private hneRepository: Repository<HnEquipment>,
         @Inject('HN_COMPLEMENTARY_DATA_REPOSITORY')
         private hncdRepository: Repository<HnComplementaryData>,
         @Inject('HN_TECHNICAL_REPORT_REPOSITORY')
@@ -30,7 +30,7 @@ export class HnEquipmentService {
 
     async get(order_id: string): Promise<HnEquipment[]> {
 
-        const hnEquipment: HnEquipment[] = await this.hneRespository.find({
+        const hnEquipment: HnEquipment[] = await this.hneRepository.find({
             where: { order: order_id },
             relations: ['order', 'order.order_type', 'equipment', 'hn_technical_report', 'hn_complementary_data']
         });
@@ -41,7 +41,7 @@ export class HnEquipmentService {
 
     async getByCustomer(customer_id: string, equipment_id: string): Promise<HnEquipment> {
 
-        const hnEquipment: any = await this.hneRespository
+        const hnEquipment: any = await this.hneRepository
             .createQueryBuilder('hne')
             .innerJoinAndSelect('hne.hn_technical_report', 'hntr')
             .innerJoinAndSelect('hne.hn_complementary_data', 'hncd')
@@ -61,7 +61,7 @@ export class HnEquipmentService {
     async create( hneDTO: HnEquipmentDTO, @TransactionManager() manager?: EntityManager ) {
 
         // let hneCreated = await manager.save(hneDTO.hn_equipment);
-        let hneCreated = await this.hneRespository.save(hneDTO.hn_equipment);
+        let hneCreated = await this.hneRepository.save(hneDTO.hn_equipment);
 
         hneDTO.hn_technical_report.hn_equipment = hneCreated;
         let hntrCreated = await this.hntrRepository.save(hneDTO.hn_technical_report);
@@ -116,7 +116,7 @@ export class HnEquipmentService {
             throw new BadRequestException('The resource ID was not sent');
         }
 
-        const hnEquipmentDb = await this.hneRespository.findOne(id, {
+        const hnEquipmentDb = await this.hneRepository.findOne(id, {
             where: { status: Status.ACTIVE },
             relations: ['order', 'equipment', 'hn_technical_report', 'hn_complementary_data']
         });
@@ -125,7 +125,7 @@ export class HnEquipmentService {
             throw new NotFoundException('The requested resource was not found');
         }
 
-        await this.hneRespository.update(id, hnDto.hn_equipment);
+        await this.hneRepository.update(id, hnDto.hn_equipment);
 
         if (hnDto.hn_technical_report) {
             await this.hntrRepository.update(hnEquipmentDb.hn_technical_report.id, hnDto.hn_technical_report);
@@ -134,7 +134,7 @@ export class HnEquipmentService {
             await this.hncdRepository.update(hnEquipmentDb.hn_complementary_data.id, hnDto.hn_complementary_data);
         }
 
-        const hnEquipmentUpdated = await this.hneRespository.findOne(id, {
+        const hnEquipmentUpdated = await this.hneRepository.findOne(id, {
             relations: ['order', 'equipment', 'hn_technical_report', 'hn_complementary_data']
         });
 
@@ -149,7 +149,7 @@ export class HnEquipmentService {
             throw new BadRequestException('The resource ID was not sent');
         }
 
-        const hnEquipmentDb = await this.hneRespository.findOne(id, {
+        const hnEquipmentDb = await this.hneRepository.findOne(id, {
             where: { status: Status.ACTIVE },
             relations: ['order', 'order.order_type', 'order.customer', 'equipment', 'hn_technical_report', 'hn_complementary_data']
         });
@@ -160,7 +160,7 @@ export class HnEquipmentService {
 
         const hncdDeleted = await this.hncdRepository.delete(hnEquipmentDb.hn_complementary_data.id);
         const hntrDeleted = await this.hntrRepository.delete(hnEquipmentDb.hn_technical_report.id);
-        const hneDeleted = await this.hneRespository.delete(hnEquipmentDb.id);
+        const hneDeleted = await this.hneRepository.delete(hnEquipmentDb.id);
 
         /* TODO: Analizar con el equipo si una orden de serivicio instalación no puede eliminarse
                  Toda vez ya existan más ordenes de servicio asociadas al equipo

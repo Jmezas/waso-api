@@ -2,8 +2,8 @@ import { Connection } from 'typeorm';
 
 // Entities
 import { HnEquipment } from './local/hn-equipment.entity';
-import { HnComplementaryData } from './local/hn-complementary-data.entity';
 import { HnTechnicalReport } from './local/hn-technical-report.entity';
+import { HnComplementaryData } from './local/hn-complementary-data.entity';
 
 
 export const hnEequipmentProviders = [
@@ -13,13 +13,13 @@ export const hnEequipmentProviders = [
         inject: ['A_LOCAL_CONNECTION'],
     },
     {
-        provide: 'HN_COMPLEMENTARY_DATA_REPOSITORY',
-        useFactory: (connection: Connection) => connection.getRepository(HnComplementaryData),
+        provide: 'HN_TECHNICAL_REPORT_REPOSITORY',
+        useFactory: (connection: Connection) => connection.getRepository(HnTechnicalReport),
         inject: ['A_LOCAL_CONNECTION'],
     },
     {
-        provide: 'HN_TECHNICAL_REPORT_REPOSITORY',
-        useFactory: (connection: Connection) => connection.getRepository(HnTechnicalReport),
+        provide: 'HN_COMPLEMENTARY_DATA_REPOSITORY',
+        useFactory: (connection: Connection) => connection.getRepository(HnComplementaryData),
         inject: ['A_LOCAL_CONNECTION'],
     },
 ];
