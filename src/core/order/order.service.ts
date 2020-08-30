@@ -140,7 +140,6 @@ export class OrderService {
             //     order: { execution_date: 'ASC' },
             //     relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type']
             // });
-            console.log('Ingrese al metodo ACTIVE', status, statusArray);
         } else {
 
             orders = await this.orderRepository
@@ -161,7 +160,6 @@ export class OrderService {
             //     order: { execution_date: 'ASC' },
             //     relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type']
             // });
-            console.log('Ingrese al metodo CLOSED', status, statusArray);
         }
 
         return orders;
