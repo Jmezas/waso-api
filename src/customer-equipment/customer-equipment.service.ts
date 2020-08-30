@@ -14,14 +14,31 @@ export class CustomerEquipmentService {
         private customerEquipmentRepository: Repository<CustomerEquipment>
     ) { }
 
-    async getCustomerEquipments( customer_id: string ): Promise<CustomerEquipment[]> {
+    async getCustomerEquipments( customer_id: string, service_type_id?: string ): Promise<CustomerEquipment[]> {
 
-        const customerEquipments = await this.customerEquipmentRepository.find({
-            where: { customer: customer_id, status: Status.ACTIVE },
-            relations: ['customer', 'equipment']
-        });
+        if (!service_type_id) {
+            const customerEquipments = await this.customerEquipmentRepository.find({
+                where: { customer: customer_id, status: Status.ACTIVE },
+                relations: ['customer', 'equipment']
+            });
 
-        return customerEquipments;
+            return customerEquipments;
+
+        } else {
+            const status = Status.ACTIVE;
+    
+            const customerEquipments = await this.customerEquipmentRepository
+                .createQueryBuilder('cEquipment')
+                .innerJoinAndSelect('cEquipment.equipment', 'equipment')
+                .innerJoinAndSelect('cEquipment.customer', 'customer')
+                .where('cEquipment.customer = :customer_id', { customer_id })
+                .andWhere('cEquipment.status = :status', { status })
+                .andWhere('equipment.service_type_id = :service_type_id', { service_type_id })
+                .getMany();
+
+            return customerEquipments;
+        }
+
     }
 
     async createCustomerEquipment( customerEquipment: CustomerEquipment ): Promise<CustomerEquipment> {

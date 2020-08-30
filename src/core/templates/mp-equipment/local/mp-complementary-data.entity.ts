@@ -8,20 +8,20 @@ export class MpComplenentaryData {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ type: 'varchar', length: 100, nullable: true })
-    timer: string;
+    @Column({ type: 'boolean', default: false })
+    timer: boolean;
 
-    @Column({ type: 'varchar', length: 100, nullable: true })
-    automation: string;
+    @Column({ type: 'boolean', default: false })
+    automation: boolean;
 
-    @Column({ type: 'varchar', length: 100, nullable: true })
-    lamps: string;
+    @Column({ type: 'boolean', default: false })
+    lamps: boolean;
 
-    @Column({ type: 'varchar', length: 100, nullable: true })
-    laminares: string;
+    @Column({ type: 'boolean', default: false })
+    laminares: boolean;
 
-    @Column({ type: 'varchar', length: 100, nullable: true })
-    chlorinator: string;
+    @Column({ type: 'boolean', default: false })
+    chlorinator: boolean;
 
     @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     total_hardness: number;
@@ -66,7 +66,7 @@ export class MpComplenentaryData {
     muriatic_acid: string;
 
     @Column({ type: 'varchar', length: 100, nullable: true })
-    salt_sotck: string;
+    salt_stock: string;
 
     @Column({ type: 'enum', enum: Status, default: Status.ACTIVE })
     status: Status;

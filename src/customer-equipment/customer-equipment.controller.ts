@@ -1,4 +1,4 @@
-import { Controller, Get, Res, HttpStatus, Param, Post, Body, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Res, HttpStatus, Param, Post, Body, Delete, UseGuards, Query } from '@nestjs/common';
 import { CustomerEquipmentService } from './customer-equipment.service';
 import { CustomerEquipment } from './local/customer-equipment.entity';
 import { AuthGuard } from '@nestjs/passport';
@@ -15,9 +15,9 @@ export class CustomerEquipmentController {
     ) { }
 
     @Get('/:customer_id')
-    async getCustomerEquipments( @Res() res, @Param('customer_id') customer_id: string  ) {
+    async getCustomerEquipments( @Res() res, @Param('customer_id') customer_id: string, @Query('service') service?: string  ) {
 
-        const customerEquipments = await this._customerEquipmentService.getCustomerEquipments(customer_id);
+        const customerEquipments = await this._customerEquipmentService.getCustomerEquipments(customer_id, service);
 
         res.status(HttpStatus.OK).json({
             customerEquipments
