@@ -115,22 +115,53 @@ export class OrderService {
 
     }
 
-    async getAllByStatus( status: string ): Promise<Order[]> {
+    async getAllByStatus( status: string, user?: string ): Promise<Order[]> {
 
         let orders: Order[] = [];
+        let statusArray = [Status.CLOSED, Status.CONFIRMED, Status.CANCELLED];
 
         if (status === 'ACTIVE') {
-            orders = await this.orderRepository.find({
-                where: { status: Status.ACTIVE },
-                order: { execution_date: 'ASC' },
-                relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type']
-            });
+
+            orders = await this.orderRepository
+                .createQueryBuilder('order')
+                .innerJoinAndSelect('order.customer', 'customer')
+                .innerJoinAndSelect('order.technical', 'technical')
+                .innerJoinAndSelect('order.user', 'user')
+                .innerJoinAndSelect('order.responsible_user', 'ruser')
+                .innerJoinAndSelect('order.order_type', 'otype')
+                .innerJoinAndSelect('order.service_type', 'stype')
+                .where('order.status = :status', { status })
+                .andWhere('technical.user = :user', { user })
+                .orderBy('order.execution_date', 'ASC')
+                .getMany();
+
+            // orders = await this.orderRepository.find({
+            //     where: { status: Status.ACTIVE },
+            //     order: { execution_date: 'ASC' },
+            //     relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type']
+            // });
+            console.log('Ingrese al metodo ACTIVE', status, statusArray);
         } else {
-            orders = await this.orderRepository.find({
-                where: { status: In([Status.CLOSED, Status.CONFIRMED, Status.CANCELLED]) },
-                order: { execution_date: 'ASC' },
-                relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type']
-            });
+
+            orders = await this.orderRepository
+                .createQueryBuilder('order')
+                .innerJoinAndSelect('order.customer', 'customer')
+                .innerJoinAndSelect('order.technical', 'technical')
+                .innerJoinAndSelect('order.user', 'user')
+                .innerJoinAndSelect('order.responsible_user', 'ruser')
+                .innerJoinAndSelect('order.order_type', 'otype')
+                .innerJoinAndSelect('order.service_type', 'stype')
+                .where('order.status in (:statusArray)', { statusArray })
+                .andWhere('technical.user = :user', { user })
+                .orderBy('order.execution_date', 'ASC')
+                .getMany();
+
+            // orders = await this.orderRepository.find({
+            //     where: { status: In([Status.CLOSED, Status.CONFIRMED, Status.CANCELLED]) },
+            //     order: { execution_date: 'ASC' },
+            //     relations: ['customer', 'technical', 'user', 'responsible_user', 'order_type', 'service_type']
+            // });
+            console.log('Ingrese al metodo CLOSED', status, statusArray);
         }
 
         return orders;

@@ -32,10 +32,10 @@ export class OrderController {
         });
     }
 
-    @Get('/status/:status')
-    async getOrdersByStatus( @Res() res, @Param('status') status: string ) {
+    @Get('/status/:status/:user')
+    async getOrdersByStatus( @Res() res, @Param('status') status: string, @Param('user') user?: string ) {
 
-        const orders = await this._orderService.getAllByStatus(status);
+        const orders = await this._orderService.getAllByStatus(status, user);
 
         res.status(HttpStatus.OK).json({
             orders
