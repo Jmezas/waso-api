@@ -11,17 +11,32 @@ export class MpComplenentaryData {
     @Column({ type: 'boolean', default: false })
     timer: boolean;
 
+    @Column({ type: 'varchar', length: 100, nullable: true })
+    timer_description: string;
+
     @Column({ type: 'boolean', default: false })
     automation: boolean;
+
+    @Column({ type: 'varchar', length: 100, nullable: true })
+    automation_description: string;
 
     @Column({ type: 'boolean', default: false })
     lamps: boolean;
 
+    @Column({ type: 'varchar', length: 100, nullable: true })
+    lamps_description: string;
+
     @Column({ type: 'boolean', default: false })
     laminares: boolean;
 
+    @Column({ type: 'varchar', length: 100, nullable: true })
+    laminares_description: string;
+
     @Column({ type: 'boolean', default: false })
     chlorinator: boolean;
+
+    @Column({ type: 'varchar', length: 100, nullable: true })
+    chlorinator_description: string;
 
     @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
     total_hardness: number;
