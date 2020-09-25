@@ -14,43 +14,58 @@ export class EquipmentService {
         private equipmentRepository: Repository<Equipment>
     ) { }
 
-    async getAll( skip: number, all: string ): Promise<[Equipment[], Number]> {
+    async getAll( skip: number, all: string, take: number ): Promise<[Equipment[], Number]> {
 
-        if (!all) {
+        if (!take) {
 
             const [equipments, totalRecords] = await this.equipmentRepository.findAndCount({
                 where: { status: Status.ACTIVE },
-                relations: ['service_type', 'customer_equipments'],
-                skip,
-                take: 10
+                relations: ['service_type', 'customer_equipments']
             });
 
             return [equipments, totalRecords];
 
-        } else {
+        }
 
-            if (all === 'true') {
+        else {
+
+            if (!all) {
 
                 const [equipments, totalRecords] = await this.equipmentRepository.findAndCount({
+                    where: { status: Status.ACTIVE },
                     relations: ['service_type', 'customer_equipments'],
                     skip,
-                    take: 10
+                    take
                 });
 
                 return [equipments, totalRecords];
 
             } else {
 
-                const [equipments, totalRecords] = await this.equipmentRepository.findAndCount({
-                    where: { status: Status.ACTIVE },
-                    relations: ['service_type', 'customer_equipments'],
-                    skip,
-                    take: 10
-                });
+                if (all === 'true') {
 
-                return [equipments, totalRecords];
-                
+                    const [equipments, totalRecords] = await this.equipmentRepository.findAndCount({
+                        relations: ['service_type', 'customer_equipments'],
+                        skip,
+                        take
+                    });
+
+                    return [equipments, totalRecords];
+
+                } else {
+
+                    const [equipments, totalRecords] = await this.equipmentRepository.findAndCount({
+                        where: { status: Status.ACTIVE },
+                        relations: ['service_type', 'customer_equipments'],
+                        skip,
+                        take
+                    });
+
+                    return [equipments, totalRecords];
+
+                }
             }
+
         }
 
     }

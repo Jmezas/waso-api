@@ -15,9 +15,9 @@ export class ServiceTypeController {
     ) { }
 
     @Get()
-    async getServiceTypes( @Res() res, @Query('skip') skip: number, @Query('all') all: string ) {
+    async getServiceTypes( @Res() res, @Query('skip') skip: number, @Query('all') all: string, @Query('take') take: number ) {
 
-        const [serviceTypes, totalRecords] = await this._serviceTypeService.getAll(skip, all);
+        const [serviceTypes, totalRecords] = await this._serviceTypeService.getAll(skip, all, take);
 
         res.status(HttpStatus.OK).json({
             serviceTypes,

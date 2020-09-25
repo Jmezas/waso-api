@@ -15,44 +15,57 @@ export class UserService {
         private userRepository: Repository<User>
     ) { }
 
-    async getAll( skip: number, all: string ): Promise<[User[], Number]> {
+    async getAll( skip: number, all: string, take: number ): Promise<[User[], Number]> {
 
-        if (!all) {
+        if (!take) {
 
             let [users, totalRecords] = await this.userRepository.findAndCount({
                 where: { status: Status.ACTIVE },
-                relations: ['role'],
-                skip,
-                take: 10
+                relations: ['role']
             });
 
             return [users, totalRecords];
 
         } else {
-            
-            if ( all === 'true' ) {
-                
-                let [users, totalRecords] = await this.userRepository.findAndCount({
-                    relations: ['role'],
-                    skip,
-                    take: 10
-                });
-    
-                return [users, totalRecords];
-                
-            } else {
+
+            if (!all) {
 
                 let [users, totalRecords] = await this.userRepository.findAndCount({
                     where: { status: Status.ACTIVE },
                     relations: ['role'],
                     skip,
-                    take: 10
+                    take
                 });
 
                 return [users, totalRecords];
+
+            } else {
+
+                if (all === 'true') {
+
+                    let [users, totalRecords] = await this.userRepository.findAndCount({
+                        relations: ['role'],
+                        skip,
+                        take
+                    });
+
+                    return [users, totalRecords];
+
+                } else {
+
+                    let [users, totalRecords] = await this.userRepository.findAndCount({
+                        where: { status: Status.ACTIVE },
+                        relations: ['role'],
+                        skip,
+                        take
+                    });
+
+                    return [users, totalRecords];
+                }
             }
-        } 
-       
+
+        }
+
     }
 
     async getResponsibles(): Promise<User[]> {
@@ -72,7 +85,10 @@ export class UserService {
             throw new BadRequestException('The resource ID was not sent')
         }
 
-        const user: User = await this.userRepository.findOne(id);
+        const user: User = await this.userRepository.findOne(id, {
+            where: { status: Status.ACTIVE },
+            relations: ['role', 'customers', 'technicians'],
+        });
 
         if (!user) {
             throw new NotFoundException('The requested resource was not found')

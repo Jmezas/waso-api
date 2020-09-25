@@ -15,43 +15,57 @@ export class TechnicalService {
         private technicalRepository: Repository<Technical>
     ) { }
 
-    async getAll( skip: number, all: string ): Promise<[Technical[], Number]> {
+    async getAll( skip: number, all: string, take: number ): Promise<[Technical[], Number]> {
 
-        if (!all) {
+        if (!take) {
 
             const [technicians, totalRecords] = await this.technicalRepository.findAndCount({
                 where: { status: Status.ACTIVE },
-                relations: ['user'],
-                skip,
-                take: 10
+                relations: ['user']
             });
-    
+
             return [technicians, totalRecords];
+        }
 
-        } else {
+        else {
 
-            if (all === 'true') {
-
-                const [technicians, totalRecords] = await this.technicalRepository.findAndCount({
-                    relations: ['user'],
-                    skip,
-                    take: 10
-                });
-
-                return [technicians, totalRecords];
-
-            } else {
-
+            if (!all) {
+    
                 const [technicians, totalRecords] = await this.technicalRepository.findAndCount({
                     where: { status: Status.ACTIVE },
                     relations: ['user'],
                     skip,
-                    take: 10
+                    take
                 });
-
+        
                 return [technicians, totalRecords];
-                
+    
+            } else {
+    
+                if (all === 'true') {
+    
+                    const [technicians, totalRecords] = await this.technicalRepository.findAndCount({
+                        relations: ['user'],
+                        skip,
+                        take
+                    });
+    
+                    return [technicians, totalRecords];
+    
+                } else {
+    
+                    const [technicians, totalRecords] = await this.technicalRepository.findAndCount({
+                        where: { status: Status.ACTIVE },
+                        relations: ['user'],
+                        skip,
+                        take
+                    });
+    
+                    return [technicians, totalRecords];
+                    
+                }
             }
+
         }
 
     }

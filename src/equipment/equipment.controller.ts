@@ -15,9 +15,9 @@ export class EquipmentController {
     ) { }
 
     @Get()
-    async getEquipments( @Res() res, @Query('skip') skip: number, @Query('all') all: string ) {
+    async getEquipments( @Res() res, @Query('skip') skip: number, @Query('all') all: string, @Query('take') take: number ) {
 
-        const [equipments, totalRecords] = await this._equipmentService.getAll(skip, all);
+        const [equipments, totalRecords] = await this._equipmentService.getAll(skip, all, take);
 
         res.status(HttpStatus.OK).json({
             equipments,

@@ -12,16 +12,30 @@ export class CustomerService {
     private customerRepository: Repository<Customer>,
   ) {}
 
-  async getAll( skip: number ): Promise<[Customer[], Number]> {
+  async getAll( skip: number, take: number ): Promise<[Customer[], Number]> {
 
-    const [customers, totalRecords] = await this.customerRepository.findAndCount({
-      where: { status: Status.ACTIVE },
-      relations: ['user'],
-      skip,
-      take: 10
-    });
+    if (!take) {
 
-    return [customers, totalRecords];
+      let [customers, totalRecords] = await this.customerRepository.findAndCount({
+        where: { status: Status.ACTIVE },
+        relations: ['user']
+      });
+
+      return [customers, totalRecords];
+
+    } else {
+      
+      let [customers, totalRecords] = await this.customerRepository.findAndCount({
+        where: { status: Status.ACTIVE },
+        relations: ['user'],
+        skip,
+        take
+      });
+
+      return [customers, totalRecords];
+
+    }
+
   }
 
   async get(id: string): Promise<Customer> {

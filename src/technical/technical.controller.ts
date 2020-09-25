@@ -15,9 +15,9 @@ export class TechnicalController {
     ) { }
 
     @Get()
-    async getTechnicians( @Res() res, @Query('skip') skip: number, @Query('all') all: string ) {
+    async getTechnicians( @Res() res, @Query('skip') skip: number, @Query('all') all: string, @Query('take') take: number ) {
 
-        const [technicians, totalRecords] = await this._technicalService.getAll(skip, all);
+        const [technicians, totalRecords] = await this._technicalService.getAll(skip, all, take);
 
         res.status(HttpStatus.OK).json({
             technicians,

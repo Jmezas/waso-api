@@ -31,8 +31,9 @@ export class UserController {
     @Res() res,
     @Query('skip') skip: number,
     @Query('all') all: string,
+    @Query('take') take: number,
   ) {
-    const [users, totalRecords] = await this._userService.getAll(skip, all);
+    const [users, totalRecords] = await this._userService.getAll(skip, all, take);
 
     res.status(HttpStatus.OK).json({
       users,
@@ -65,20 +66,7 @@ export class UserController {
   // TODO: Luego se realizará refactor para crear el registro de usuarios en el modulo auth
   @Post()
   async create(@Res() res, @Body() user: User) {
-    // validate(user).then(errors => { // errors is an array of validation errors
-    //     if (errors.length > 0) {
-
-    //         console.log('Validate errors', errors);
-
-    //         return res.status(HttpStatus.BAD_REQUEST).json({
-    //             message: 'error',
-    //             errors
-    //         });
-    //     } else {
-    //         console.log('No ingrese al IF de errors');
-    //     }
-    // });
-
+    
     const userCreated = await this._userService.create(user);
 
     res.status(HttpStatus.CREATED).json({

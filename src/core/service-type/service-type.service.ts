@@ -14,39 +14,53 @@ export class ServiceTypeService {
         private serviceTypeRepository: Repository<ServiceType>
     ) { }
 
-    async getAll( skip: number, all: string ): Promise<[ServiceType[], Number]> {
+    async getAll( skip: number, all: string, take: number ): Promise<[ServiceType[], Number]> {
 
-        if (!all) {
+        if (!take) {
 
             const [serviceTypes, totalRecords] = await this.serviceTypeRepository.findAndCount({
-                where: { status: Status.ACTIVE },
-                skip,
-                take: 10
+                where: { status: Status.ACTIVE }
             });
 
             return [serviceTypes, totalRecords];
 
-        } else {
+        }
 
-            if (all === 'true') {
+        else {
+
+            if (!all) {
 
                 const [serviceTypes, totalRecords] = await this.serviceTypeRepository.findAndCount({
+                    where: { status: Status.ACTIVE },
                     skip,
-                    take: 10
+                    take
                 });
 
                 return [serviceTypes, totalRecords];
 
             } else {
 
-                const [serviceTypes, totalRecords] = await this.serviceTypeRepository.findAndCount({
-                    where: { status: Status.ACTIVE },
-                    skip,
-                    take: 10
-                });
+                if (all === 'true') {
 
-                return [serviceTypes, totalRecords];
+                    const [serviceTypes, totalRecords] = await this.serviceTypeRepository.findAndCount({
+                        skip,
+                        take
+                    });
+
+                    return [serviceTypes, totalRecords];
+
+                } else {
+
+                    const [serviceTypes, totalRecords] = await this.serviceTypeRepository.findAndCount({
+                        where: { status: Status.ACTIVE },
+                        skip,
+                        take
+                    });
+
+                    return [serviceTypes, totalRecords];
+                }
             }
+
         }
         
     }

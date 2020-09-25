@@ -16,8 +16,8 @@ export class CustomerController {
   constructor(private readonly _customerService: CustomerService) {}
 
   @Get()
-  async getCustomers(@Res() res, @Query('skip') skip: number) {
-    const [customers, totalRecords] = await this._customerService.getAll(skip);
+  async getCustomers(@Res() res, @Query('skip') skip: number, @Query('take') take: number) {
+    const [customers, totalRecords] = await this._customerService.getAll(skip, take);
 
     res.status(HttpStatus.OK).json({
       customers,
