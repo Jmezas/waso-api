@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res, HttpStatus, Query, UseGuards, Put, Body } from '@nestjs/common';
+import { Controller, Get, Param, Res, HttpStatus, Query, UseGuards, Put, Body, Post, Delete } from '@nestjs/common';
 
 // Services
 import { CustomerService } from './customer.service';
@@ -43,8 +43,20 @@ export class CustomerController {
     });
   }
 
+  @Post()
+  async createCustomer( @Res() res, @Body() customer: Customer ) {
+
+    const customerCreated = await this._customerService.create(customer);
+
+    res.status(HttpStatus.CREATED).json({
+      message: 'Customer successfully created',
+      customerCreated
+    });
+
+  }
+
   @Put('/:id')
-  async updateTechnical(@Res() res, @Param('id') id: string, @Body() customer: Customer) {
+  async updateCustomer(@Res() res, @Param('id') id: string, @Body() customer: Customer) {
 
     const customerUpdated = await this._customerService.update(id, customer);
 
@@ -52,6 +64,18 @@ export class CustomerController {
       message: 'Customer successfully updated',
       customerUpdated
     });
+  }
+
+  @Delete('/:id')
+  async deleteCustomer( @Res() res, @Param('id') id: string ) {
+
+    const customerDeleted = await this._customerService.delete(id);
+
+    res.status(HttpStatus.OK).json({
+      message: 'Customer successfully deleted',
+      customerDeleted
+    });
+    
   }
 
 }

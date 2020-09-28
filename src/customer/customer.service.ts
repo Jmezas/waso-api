@@ -67,6 +67,14 @@ export class CustomerService {
 
   }
 
+  async create(customer: Customer): Promise<Customer> {
+
+    const customerCreated = await this.customerRepository.save(customer);
+
+    return customerCreated;
+
+  }
+
   async update(id: string, customer: Customer): Promise<Customer> {
 
     if (!id) {
@@ -86,6 +94,31 @@ export class CustomerService {
     const customerUpdated = await this.customerRepository.findOne(id);
 
     return customerUpdated;
+
+  }
+
+  async delete(id: string): Promise<Customer> {
+
+    if (!id) {
+      throw new BadRequestException('The resource ID was not sent')
+    }
+
+    const customerDb: Customer = await this.customerRepository.findOne(id, {
+      where: { status: Status.ACTIVE }
+    });
+
+    if (!customerDb) {
+      throw new NotFoundException('The requested resource was not found')
+    }
+
+    await this.customerRepository.update(id, {
+      status: Status.INACTIVE
+    });
+
+    const customerDeleted = await this.customerRepository.findOne(id);
+
+    return customerDeleted;
+
   }
 
 }
