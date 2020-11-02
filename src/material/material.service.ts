@@ -33,4 +33,13 @@ export class MaterialService {
 
         return material;
     }
+    
+    async getByCode(code: string): Promise<Material[]> {
+
+        const material = await this.materialRepository.find({
+            where: { code, status: Status.ACTIVE },
+        });
+
+        return material;
+    }
 }

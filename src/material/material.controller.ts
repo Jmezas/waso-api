@@ -33,4 +33,14 @@ export class MaterialController {
             material
         });
     }
+
+    @Get('/code/:code')
+    async getMaterialByCode( @Res() res, @Param('code') code: string ) {
+
+        const material = await this._materialService.getByCode(code);
+
+        res.status(HttpStatus.OK).json({
+            material
+        });
+    }
 }

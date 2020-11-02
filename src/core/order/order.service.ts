@@ -4,11 +4,9 @@ import { Status } from '../../common/status.enum';
 
 // Models
 import { Order } from './local/order.entity';
-import { User } from '../../user/local/user.entity';
 import { HnEquipment } from '../templates/hn-equipment/local/hn-equipment.entity';
 import { HnComplementaryData } from '../templates/hn-equipment/local/hn-complementary-data.entity';
 import { HnTechnicalReport } from '../templates/hn-equipment/local/hn-technical-report.entity';
-import { CustomerEquipment } from '../../customer-equipment/local/customer-equipment.entity';
 
 @Injectable()
 export class OrderService {
@@ -19,8 +17,6 @@ export class OrderService {
     constructor(
         @Inject('ORDER_REPOSITORY')
         private orderRepository: Repository<Order>,
-        @Inject('USER_REPOSITORY')
-        private userRepository: Repository<User>,
         @Inject('HN_EQUIPMENT_REPOSITORY')
         private hneRespository: Repository<HnEquipment>,
         @Inject('HN_COMPLEMENTARY_DATA_REPOSITORY')
@@ -178,7 +174,7 @@ export class OrderService {
     async create(order: Order): Promise<Order> {
 
         // Instanciar el primer número de orden
-        order.order_number = 1
+        order.order_number = 1;
 
         if (!order.responsible_user) {
             order.responsible_user = order.user;

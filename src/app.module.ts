@@ -38,5 +38,6 @@ import { join } from 'path';
     SearchModule
   ],
   providers: [],
+  controllers: [],
 })
 export class AppModule {}

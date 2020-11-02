@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToOne, OneToOne, OneToMany } from 'typeorm';
 import { Status } from '../../../common/status.enum';
 
 // Model-Relations
@@ -9,12 +9,13 @@ import { OrderType } from '../../order-type/local/order-type.entity';
 import { ServiceType } from '../../service-type/local/service-type.entity';
 import { HnEquipment } from '../../templates/hn-equipment/local/hn-equipment.entity';
 import { MpEquipment } from '../../templates/mp-equipment/local/mp-equipment.entity';
+import { Quotation } from '../../quotation/local/quotation.entity';
 
 @Entity('orders')
 export class Order {
 
     @PrimaryGeneratedColumn('uuid')
-    id: number;
+    id: string;
 
     @Column({ type: 'int' })
     order_number: number;
@@ -129,5 +130,11 @@ export class Order {
         mp_equipment => mp_equipment.order
     )
     mp_equipment: MpEquipment;
+
+    @OneToMany(
+        type => Quotation,
+        quotation => quotation.order
+    )
+    quotations: Quotation[];
 
 }
