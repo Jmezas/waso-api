@@ -80,8 +80,6 @@ export class QuotationService {
 
     const quotationCreated = await this.quotationRepository.save(quotation);
 
-    console.log(quotationDb, quotation);
-
     return quotationCreated;
   }
 

@@ -10,6 +10,7 @@ import { ServiceType } from '../../service-type/local/service-type.entity';
 import { HnEquipment } from '../../templates/hn-equipment/local/hn-equipment.entity';
 import { MpEquipment } from '../../templates/mp-equipment/local/mp-equipment.entity';
 import { Quotation } from '../../quotation/local/quotation.entity';
+import { GhEquipment } from '../../templates/gh-equipment/local/gh-equipment.entity';
 
 @Entity('orders')
 export class Order {
@@ -20,7 +21,7 @@ export class Order {
     @Column({ type: 'int' })
     order_number: number;
 
-    @Column({ type: 'varchar', length: 50 })
+    @Column({ type: 'varchar', length: 50, nullable: true })
     invoice: string;
 
     // Atributo consumido desde la DB Client
@@ -130,6 +131,12 @@ export class Order {
         mp_equipment => mp_equipment.order
     )
     mp_equipment: MpEquipment;
+
+    @OneToOne(
+        type => GhEquipment,
+        gh_equipment => gh_equipment.order
+    )
+    gh_equipment: GhEquipment;
 
     @OneToMany(
         type => Quotation,

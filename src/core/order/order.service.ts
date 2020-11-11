@@ -197,8 +197,6 @@ export class OrderService {
 
         const orderCreated = await this.orderRepository.save(order);
 
-        console.log(orderDb, order);
-
         return orderCreated;
     }
 
