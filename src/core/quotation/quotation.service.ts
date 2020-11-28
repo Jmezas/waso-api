@@ -20,7 +20,7 @@ export class QuotationService {
         totalRecords,
       ] = await this.quotationRepository.findAndCount({
         where: { status: Status.ACTIVE },
-        relations: ['order', 'quotation_details'],
+        relations: ['order', 'quotation_details', 'order.customer'],
         skip
       });
 
@@ -30,7 +30,7 @@ export class QuotationService {
         quotations,
         totalRecords,
       ] = await this.quotationRepository.findAndCount({
-        relations: ['order', 'quotation_details'],
+        relations: ['order', 'quotation_details', 'order.customer'],
         skip
       });
 
@@ -40,7 +40,7 @@ export class QuotationService {
 
   async get(id: string): Promise<Quotation> {
     const quotation: Quotation = await this.quotationRepository.findOne(id, {
-      relations: ['order', 'quotation_details'],
+      relations: ['order', 'quotation_details', 'order.customer'],
     });
 
     return quotation;

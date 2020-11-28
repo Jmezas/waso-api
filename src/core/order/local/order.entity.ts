@@ -11,6 +11,7 @@ import { HnEquipment } from '../../templates/hn-equipment/local/hn-equipment.ent
 import { MpEquipment } from '../../templates/mp-equipment/local/mp-equipment.entity';
 import { Quotation } from '../../quotation/local/quotation.entity';
 import { GhEquipment } from '../../templates/gh-equipment/local/gh-equipment.entity';
+import { EhEquipment } from '../../templates/eh-equipment/local/eh-equipment.entity';
 
 @Entity('orders')
 export class Order {
@@ -137,6 +138,12 @@ export class Order {
         gh_equipment => gh_equipment.order
     )
     gh_equipment: GhEquipment;
+
+    @OneToOne(
+        type => EhEquipment,
+        eh_equipment => eh_equipment.order
+    )
+    eh_equipment: EhEquipment;
 
     @OneToMany(
         type => Quotation,

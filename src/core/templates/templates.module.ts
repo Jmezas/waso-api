@@ -4,6 +4,7 @@ import { SmEquipmentModule } from './sm-equipment/sm-equipment.module';
 import { MpEquipmentModule } from './mp-equipment/mp-equipment.module';
 import { GhEquipmentModule } from './gh-equipment/gh-equipment.module';
 import { HeaterTypeModule } from './heater-type/heater-type.module';
+import { EhEquipmentModule } from './eh-equipment/eh-equipment.module';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { HeaterTypeModule } from './heater-type/heater-type.module';
     SmEquipmentModule,
     MpEquipmentModule,
     GhEquipmentModule,
-    HeaterTypeModule
+    HeaterTypeModule,
+    EhEquipmentModule
   ]
 })
 export class TemplatesModule {}

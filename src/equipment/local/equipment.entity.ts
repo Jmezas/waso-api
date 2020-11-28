@@ -5,6 +5,7 @@ import { CustomerEquipment } from '../../customer-equipment/local/customer-equip
 import { ServiceType } from '../../core/service-type/local/service-type.entity';
 import { MpEquipment } from '../../core/templates/mp-equipment/local/mp-equipment.entity';
 import { GhEquipment } from '../../core/templates/gh-equipment/local/gh-equipment.entity';
+import { EhEquipment } from '../../core/templates/eh-equipment/local/eh-equipment.entity';
 
 @Entity('equipments')
 export class Equipment {
@@ -54,6 +55,12 @@ export class Equipment {
         gh_equipment => gh_equipment.equipment
     )
     gh_equipments: GhEquipment[];
+
+    @OneToMany(
+        type => EhEquipment,
+        eh_equipment => eh_equipment.equipment
+    )
+    eh_equipments: EhEquipment[];
 
     @OneToMany(
         type => CustomerEquipment,

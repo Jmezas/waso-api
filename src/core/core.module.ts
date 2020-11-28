@@ -11,7 +11,9 @@ import { QuotationDetailModule } from './quotation-detail/quotation-detail.modul
       OrderModule, 
       OrderTypeModule, 
       ServiceTypeModule, 
-      TemplatesModule, QuotationModule, QuotationDetailModule
+      TemplatesModule, 
+      QuotationModule, 
+      QuotationDetailModule
     ]
 })
 export class CoreModule {}
