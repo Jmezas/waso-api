@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Brackets, QueryBuilder, Repository } from 'typeorm';
 import { Material } from './external/material.entity';
 import { Status } from '../common/status.enum';
 
@@ -23,6 +23,22 @@ export class MaterialService {
         });
 
         return [materials, totalRecords];
+    }
+
+    async getByName( searchTerm: string ): Promise<Material[]> {
+
+        const status = Status.INACTIVE;
+
+        const materials = await this.materialRepository
+                .createQueryBuilder('material')
+                .where('material.status <> :status', { status })
+                .andWhere(new Brackets(qb => {
+                    qb.where('material.description like :searchTerm', { searchTerm })
+                }))
+                .getMany();
+        
+        return materials;
+
     }
 
     async get(id: string): Promise<Material> {

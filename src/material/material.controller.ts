@@ -24,6 +24,16 @@ export class MaterialController {
         });
     }
 
+    @Get('/description')
+    async getMaterialsByName( @Res() res, @Query('term') term: string ) {
+
+        const materials = await this._materialService.getByName(term);
+
+        res.status(HttpStatus.OK).json({
+            materials
+        });
+    }
+
     @Get('/:id')
     async getMaterial( @Res() res, @Param('id') id: string ) {
 
