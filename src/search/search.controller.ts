@@ -32,10 +32,26 @@ export class SearchController {
         switch( collection ) {
 
             case 'orders':
-                const [orders, totalRecords] = await this._searchService.getOrders( term, skip, all, order_by, order_term );
+                const [orders, totalRecordsO] = await this._searchService.getOrders( term, skip, all, order_by, order_term );
                 res.status(HttpStatus.OK).json({
                     orders,
-                    totalRecords
+                    totalRecords: totalRecordsO
+                });
+            break;
+
+            case 'materials':
+                const [materials, totalRecordsM] = await this._searchService.getMaterials( term, skip );
+                res.status(HttpStatus.OK).json({
+                    materials,
+                    totalRecords: totalRecordsM
+                });
+            break;
+
+            case 'customers':
+                const [customers, totalRecordsC] = await this._searchService.getCustomers( term, skip );
+                res.status(HttpStatus.OK).json({
+                    customers,
+                    totalRecords: totalRecordsC
                 });
             break;
 
