@@ -24,6 +24,17 @@ export class MaterialController {
         });
     }
 
+    @Get('/external')
+    async getMaterialExternal( @Res() res ) {
+
+        const materials_inserted = await this._materialService.getMaterialExternal();
+
+        res.status(HttpStatus.OK).json({
+            message: 'Datos actualizados',
+            materials_inserted
+        });
+    }   
+
     @Get('/description')
     async getMaterialsByName( @Res() res, @Query('term') term: string ) {
 

@@ -1,8 +1,8 @@
-import { type } from "os";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Status } from '../../../common/status.enum';
 import { Quotation } from '../../quotation/local/quotation.entity';
-import { Material } from '../../../material/external/material.entity';
+import { Material } from '../../../material/local/material.entity';
+import { MaterialExt } from '../../../material/external/material.entity';
 
 @Entity('quotation-details')
 export class QuotationDetail {
@@ -44,5 +44,5 @@ export class QuotationDetail {
     )
     @JoinColumn({ name: 'material_id' })
     material: Material;
-    
+
 }

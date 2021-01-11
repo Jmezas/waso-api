@@ -3,7 +3,7 @@ import { Status } from '../../../common/status.enum';
 
 // Model-Relations
 import { Technical } from '../../../technical/local/technical.entity';
-import { Customer } from '../../../customer/external/customer.entity';
+import { Customer } from '../../../customer/local/customer.entity';
 import { User } from '../../../user/local/user.entity';
 import { OrderType } from '../../order-type/local/order-type.entity';
 import { ServiceType } from '../../service-type/local/service-type.entity';

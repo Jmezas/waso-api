@@ -2,7 +2,7 @@ import { Controller, Get, Param, Res, HttpStatus, Query, UseGuards, Put, Body, P
 
 // Services
 import { CustomerService } from './customer.service';
-import { Customer } from './external/customer.entity';
+import { Customer } from './local/customer.entity';
 
 // Guards
 import { AuthGuard } from '@nestjs/passport';
@@ -25,12 +25,14 @@ export class CustomerController {
     });
   }
 
-  @Get('/select')
-  async getCustomersSelect(@Res() res) {
-    const customers = await this._customerService.getCustomerSelect();
+  @Get('/external')
+  async getCustomerExternal(@Res() res) {
+
+    const customers_inserted = await this._customerService.getCustomerExternal();
 
     res.status(HttpStatus.OK).json({
-      customers,
+      message: 'Datos actualizados',
+      customers_inserted
     });
   }
 

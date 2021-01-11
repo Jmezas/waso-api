@@ -5,7 +5,7 @@ import { Status } from '../../common/status.enum';
 // Model-Relations
 import { Role } from '../../role/local/role.entity';
 import { Order } from '../../core/order/local/order.entity';
-import { Customer } from '../../customer/external/customer.entity';
+import { Customer } from '../../customer/local/customer.entity';
 import { Technical } from '../../technical/local/technical.entity';
 
 @Entity('users')

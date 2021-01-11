@@ -1,36 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Status } from '../../common/status.enum';
-import { QuotationDetail } from '../../core/quotation-detail/local/quotation-detail.entity';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('materials')
-export class Material {
+@Entity('VISTA_INVENTARIO')
+export class MaterialExt {
 
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryGeneratedColumn('rowid')
+    CVE_ART: string;
 
-    @Column({type: 'varchar', length: 20})
-    code: string;
+    @Column({ type: 'varchar' })
+    DESCR: string;
 
-    // @Column({ type: 'varchar', length: 250 })
-    // name: string;
+    @Column({ type: 'float' })
+    EXIST: number;
 
-    @Column({ type: 'varchar', length: 500 })
-    description: string;
-
-    @Column({type: 'decimal', precision: 8, scale: 2, nullable: true})
-    price: number;
-
-    // @Column({ type: 'varchar', length: 100 })
-    // category: string;
-
-    // @Column({ type: 'varchar', enum: Status, default: Status.ACTIVE, length: 25 })
-    @Column({ type: 'enum', enum: Status, default: Status.ACTIVE })
-    status: string;
-
-    @OneToMany(
-        type => QuotationDetail,
-        quotation_detail => quotation_detail.material
-    )
-    quotation_details: QuotationDetail[];
+    @Column({ type: 'decimal', precision: 16, scale: 2 })
+    PRECIO: number;
 
 }

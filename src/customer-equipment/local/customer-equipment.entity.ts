@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Status } from '../../common/status.enum';
 import { Equipment } from '../../equipment/local/equipment.entity';
-import { Customer } from '../../customer/external/customer.entity';
+import { Customer } from '../../customer/local/customer.entity';
 
 @Entity('customer_equipments')
 export class CustomerEquipment {

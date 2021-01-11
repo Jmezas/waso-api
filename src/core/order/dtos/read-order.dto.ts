@@ -3,7 +3,7 @@ import { IsString, IsDate, IsNumber } from 'class-validator';
 import { Status } from '../../../common/status.enum';
 
 import { User } from '../../../user/local/user.entity';
-import { Customer } from '../../../customer/external/customer.entity';
+import { Customer } from '../../../customer/local/customer.entity';
 import { Technical } from '../../../technical/local/technical.entity';
 import { OrderType } from '../../order-type/local/order-type.entity';
 import { ServiceType } from '../../service-type/local/service-type.entity';

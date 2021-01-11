@@ -1,7 +1,9 @@
-import { Controller, Get, Param, Res, HttpStatus, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Res, HttpStatus, Post, Body, Put, Delete, UseGuards } from '@nestjs/common';
 import { QuotationDetailService } from './quotation-detail.service';
 import { QuotationDetail } from './local/quotation-detail.entity';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('quotation-details')
 export class QuotationDetailController {
 

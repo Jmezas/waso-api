@@ -4,8 +4,8 @@ import { Repository, Brackets } from 'typeorm';
 // Entities
 import { Order } from '../core/order/local/order.entity';
 import { Status } from '../common/status.enum';
-import { Material } from '../material/external/material.entity';
-import { Customer } from '../customer/external/customer.entity';
+import { Material } from '../material/local/material.entity';
+import { Customer } from '../customer/local/customer.entity';
 
 @Injectable()
 export class SearchService {
@@ -50,7 +50,7 @@ export class SearchService {
                     .andWhere(new Brackets(qb => {
                         qb.where('order.order_number = :term', { term })
                         // .orWhere('order.execution_date like :searchTerm', { searchTerm })
-                        .orWhere('customer.first_name like :searchTerm', { searchTerm })
+                        .orWhere('customer.full_name like :searchTerm', { searchTerm })
                         .orWhere('customer.nit = :term', { term })
                         .orWhere('technical.first_name like :searchTerm', { searchTerm })
                         .orWhere('technical.last_name like :searchTerm', { searchTerm })
@@ -75,7 +75,7 @@ export class SearchService {
                     .andWhere(new Brackets(qb => {
                         qb.where('order.order_number = :term', { term })
                             // .orWhere('order.execution_date like :searchTerm', { searchTerm })
-                            .orWhere('customer.first_name like :searchTerm', { searchTerm })
+                            .orWhere('customer.full_name like :searchTerm', { searchTerm })
                             .orWhere('customer.nit = :term', { term })
                             .orWhere('technical.first_name like :searchTerm', { searchTerm })
                             .orWhere('technical.last_name like :searchTerm', { searchTerm })
@@ -100,7 +100,7 @@ export class SearchService {
                     .innerJoinAndSelect('order.order_type', 'otype')
                     .innerJoinAndSelect('order.service_type', 'stype')
                     .where('order.order_number = :term', { term })
-                    .orWhere('customer.first_name like :searchTerm', { searchTerm })
+                    .orWhere('customer.full_name like :searchTerm', { searchTerm })
                     .orWhere('customer.nit = :term', { term })
                     .orWhere('technical.first_name like :searchTerm', { searchTerm })
                     .orWhere('technical.last_name like :searchTerm', { searchTerm })
@@ -121,7 +121,7 @@ export class SearchService {
                     .innerJoinAndSelect('order.order_type', 'otype')
                     .innerJoinAndSelect('order.service_type', 'stype')
                     .where('order.order_number = :term', { term })
-                    .orWhere('customer.first_name like :searchTerm', { searchTerm })
+                    .orWhere('customer.full_name like :searchTerm', { searchTerm })
                     .orWhere('customer.nit = :term', { term })
                     .orWhere('technical.first_name like :searchTerm', { searchTerm })
                     .orWhere('technical.last_name like :searchTerm', { searchTerm })
@@ -166,7 +166,8 @@ export class SearchService {
             .where('customer.status <> :status', { status })
             .andWhere(new Brackets(qb => {
                 qb.where('customer.nit = :term', { term })
-                    .orWhere('customer.first_name like :searchTerm', { searchTerm })
+                    .orWhere('customer.legacy_code = :term', { term })
+                    .orWhere('customer.full_name like :searchTerm', { searchTerm })
             }))
             .skip(skip)
             .take(10)
