@@ -11,7 +11,7 @@ export const databaseProviders = [
                username: 'waso_user',
                password: 'WasoUser1.$$',
                database: 'waso_db',
-               entities: [__dirname + '/../**/**/*.entity{.ts,.js}'],
+               entities: [__dirname + '/../**/local/*.entity{.ts,.js}'],
                synchronize: true,
              }),
          },
